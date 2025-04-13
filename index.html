@@ -11,7 +11,7 @@
   <meta property="og:description" content="黃庭筠的顏射互動網站 - 在線射精體驗">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://huangtt607.github.io/TINGYUNCUM/">
-  <meta property="og:image" content="images/profiles/1.png">
+  <meta property="og:image" content="images/profiles/preview.jpg">
   <title>黃庭筠的顏射體驗</title>
   <link rel="icon" type="image/png" href="images/favicon.png">
   <!-- Google tag (gtag.js) -->
@@ -96,7 +96,7 @@
     #fixed-controls {
       position: fixed; 
       top: 10px; 
-      left: 10px; 
+      left: 50px; /* 從10px改為50px，使按鈕不貼邊 */
       z-index: 1000;
       display: flex; 
       flex-direction: column;
@@ -107,6 +107,7 @@
       margin-bottom: 5px; font-size: 14px; display: none;
       opacity: 0.8;
       text-align: left;
+      width: 140px; /* 固定寬度，使所有按鈕大小一致 */
     }
     #fixed-controls button:hover {
       opacity: 1;
@@ -177,9 +178,8 @@
     #help-modal {
       display: none; position: fixed; top: 0; left: 0;
       width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.9);
-      z-index: 10001; flex-direction: column;
-      justify-content: center; align-items: center; padding: 20px;
-      box-sizing: border-box; overflow-y: auto;
+      z-index: 10001; overflow-y: auto; /* 確保可以滾動 */
+      padding: 0; /* 移除padding，避免內容超出畫面 */
     }
     #help-modal h3 { 
       color: white; 
@@ -198,18 +198,20 @@
     }
     #help-modal img {
       max-width: 90%;
-      max-height: 300px; /* 減小圖片高度 */
+      max-height: 250px; /* 進一步減小圖片高度 */
       margin: 15px 0;
       border-radius: 5px;
       box-shadow: 0 0 20px rgba(255, 20, 147, 0.5);
     }
     #help-modal .modal-content {
       background-color: rgba(0, 0, 0, 0.7);
-      padding: 25px;
+      padding: 20px;
       border-radius: 10px;
       max-width: 800px;
-      margin: 10px auto; /* 減小上下邊距 */
+      width: 90%;
+      margin: 30px auto; /* 增加上下邊距，確保內容不會貼邊 */
       border: 1px solid #ff1493;
+      position: relative; /* 添加相對定位 */
     }
     #help-modal .feature-section {
       margin-bottom: 20px;
@@ -254,7 +256,7 @@
     .right-controls {
       position: fixed;
       top: 10px;
-      right: 10px;
+      right: 50px; /* 從10px改為50px，使按鈕不貼邊 */
       z-index: 100;
       display: flex;
       flex-direction: column;
@@ -265,7 +267,7 @@
     #profile-switcher {
       position: fixed;
       bottom: 15px;
-      right: 15px;
+      right: 50px; /* 從15px改為50px，使按鈕不貼邊 */
       z-index: 100;
       background-color: rgba(255, 105, 180, 0.7);
       border-radius: 50%;
@@ -368,6 +370,12 @@
       #fixed-controls {
         display: none; /* 在手機上隱藏桌面版控制按鈕 */
       }
+      .right-controls {
+        right: 20px; /* 在手機上減小右側邊距 */
+      }
+      #profile-switcher {
+        right: 20px; /* 在手機上減小右側邊距 */
+      }
       .small-button { 
         width: calc(50% - 4px); /* 在手機上每行顯示兩個按鈕 */
         font-size: 14px;
@@ -389,7 +397,8 @@
       }
       #help-modal .modal-content {
         padding: 15px;
-        margin: 5px auto;
+        margin: 20px auto;
+        width: 95%;
       }
       #help-modal h3 {
         font-size: 22px;
@@ -520,544 +529,625 @@
         <button id="clean-button" class="button small-button">清除畫布</button>
         <button id="custom-mode-button" class="button small-button">自定義</button>
       </div>
-      <p class="info">玩弄這欠幹婊子！使勁羞辱她！</p>
     </div>
+    <p class="info">玩弄這欠幹婊子！使勁羞辱她！</p>
   </div>
 
   <script>
-    const canvas = document.getElementById('main-canvas');
-    const ctx = canvas.getContext('2d');
-    const els = {
-      shoot: document.getElementById('shoot-button'),
-      clean: document.getElementById('clean-button'),
-      addText: document.getElementById('add-text-button'),
-      randomText: document.getElementById('random-text-button'),
-      textInput: document.getElementById('custom-text-input'),
-      canvasContainer: document.getElementById('canvas-container'),
-      aimCircle: document.getElementById('aim-circle'),
-      exitAim: document.getElementById('exit-aim-mode'),
-      enlargeText: document.getElementById('enlarge-text'),
-      shrinkText: document.getElementById('shrink-text'),
-      deleteText: document.getElementById('delete-text'),
-      mobileTextControls: document.querySelector('.mobile-text-controls'),
-      mobileEnlargeText: document.getElementById('mobile-enlarge-text'),
-      mobileShrinkText: document.getElementById('mobile-shrink-text'),
-      mobileDeleteText: document.getElementById('mobile-delete-text'),
-      warningScreen: document.getElementById('warning-screen'),
-      enterBtn: document.getElementById('enter-button'),
-      exitBtn: document.getElementById('exit-button'),
-      loadingScreen: document.getElementById('loading-screen'),
-      progressBar: document.getElementById('progress-bar'),
-      progressText: document.getElementById('progress-text'),
-      customModeBtn: document.getElementById('custom-mode-button'),
-      customImageModal: document.getElementById('custom-image-modal'),
-      customImageInput: document.getElementById('custom-image-input'),
-      customImagePreview: document.getElementById('custom-image-preview'),
-      applyCustomImage: document.getElementById('apply-custom-image'),
-      cancelCustomImage: document.getElementById('cancel-custom-image'),
-      resetDefaultImage: document.getElementById('reset-default-image'),
-      profileSwitcher: document.getElementById('profile-switcher'),
-      shootingTip: document.getElementById('shooting-tip'),
-      helpButton: document.getElementById('help-button'),
-      helpModal: document.getElementById('help-modal'),
-      closeHelp: document.getElementById('close-help')
+    // 狀態管理
+    const state = {
+      currentProfile: 1,
+      totalProfiles: 6, // 更新為6張預設照片
+      isAimMode: false,
+      selectedText: null,
+      textElements: [],
+      initialTextsAdded: false,
+      isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
     };
-    
+
+    // DOM元素
+    const warningScreen = document.getElementById('warning-screen');
+    const enterButton = document.getElementById('enter-button');
+    const exitButton = document.getElementById('exit-button');
+    const loadingScreen = document.getElementById('loading-screen');
+    const progressBar = document.getElementById('progress-bar');
+    const progressText = document.getElementById('progress-text');
+    const canvasContainer = document.getElementById('canvas-container');
+    const mainCanvas = document.getElementById('main-canvas');
+    const aimCircle = document.getElementById('aim-circle');
+    const customTextInput = document.getElementById('custom-text-input');
+    const addTextButton = document.getElementById('add-text-button');
+    const randomTextButton = document.getElementById('random-text-button');
+    const shootButton = document.getElementById('shoot-button');
+    const cleanButton = document.getElementById('clean-button');
+    const customModeButton = document.getElementById('custom-mode-button');
+    const exitAimModeButton = document.getElementById('exit-aim-mode');
+    const enlargeTextButton = document.getElementById('enlarge-text');
+    const shrinkTextButton = document.getElementById('shrink-text');
+    const deleteTextButton = document.getElementById('delete-text');
+    const mobileEnlargeTextButton = document.getElementById('mobile-enlarge-text');
+    const mobileShrinkTextButton = document.getElementById('mobile-shrink-text');
+    const mobileDeleteTextButton = document.getElementById('mobile-delete-text');
+    const mobileTextControls = document.querySelector('.mobile-text-controls');
+    const customImageModal = document.getElementById('custom-image-modal');
+    const customImageInput = document.getElementById('custom-image-input');
+    const customImagePreview = document.getElementById('custom-image-preview');
+    const applyCustomImageButton = document.getElementById('apply-custom-image');
+    const resetDefaultImageButton = document.getElementById('reset-default-image');
+    const cancelCustomImageButton = document.getElementById('cancel-custom-image');
+    const profileSwitcher = document.getElementById('profile-switcher');
+    const helpButton = document.getElementById('help-button');
+    const helpModal = document.getElementById('help-modal');
+    const closeHelpButton = document.getElementById('close-help');
+    const shootingTip = document.getElementById('shooting-tip');
+
+    // 隨機文字列表
     const randomTexts = [
-      "世新大學公廁", "傳播系肉便器", "A103210095賤畜", "黃庭筠賤種", "人盡可夫的婊子",
-      "精液儲存罐", "爛穴母狗", "飢渴的騷逼", "永遠合不攏的逼", "精液過敏體質",
-      "最愛吃屎的賤貨", "專吃爛雞巴", "專業吸精", "最愛被尿在臉上", "每天含精睡覺",
-      "乳頭比眼睛還大", "爛掉的子宮", "鬆垮的陰唇", "爛臭的肛門", "奶頭永遠勃起",
-      "不如街邊的狗", "連廁所都嫌你髒", "垃圾都比你值錢", "生來就該被操死", "賤到骨子裡",
-      "1995/12/13生的廢物", "傳播系最賤學生", "世新大學性奴", "臺灣最賤女人", "黃家的恥辱"
+      '賤貨', '母狗', '騷貨', '精液便器', '肉便器', '公共廁所',
+      '婊子', '賤人', '騷逼', '淫蕩', '欠幹', '欠操',
+      '賤種', '賤逼', '騷婊', '賤婊', '騷母狗', '賤母狗'
     ];
 
-    const cumImages = [
-      "images/cum/573575155.png", 
-      "images/cum/937768552.png",
-      "images/cum/2056307458.png", 
-      "images/cum/146852559.png",
-      "images/cum/151294132.png", 
-      "images/cum/374512044.png",
-      "images/cum/375362629.png", 
-      "images/cum/387016456.png",
-      "images/cum/406480507.png", 
-      "images/cum/471795489.png",
-      "images/cum/577989388.png", 
-      "images/cum/579602214.png",
-      "images/cum/1178825790.png",
-      "images/cum/387016457.png"
-    ];
-    
-    const profileImages = [
-      "images/profiles/1.png",
-      "images/profiles/2.png",
-      "images/profiles/3.png",
-      "images/profiles/4.jpeg",
-      "images/profiles/5.jpg",
-      "images/profiles/6.jpg" // 新增第6張圖片
-    ];
-    
-    let state = {
-      isAiming: false,
-      baseImage: new Image(),
-      currentCumIndex: 0,
-      selectedText: null,
-      preloadedImages: [],
-      preloadedProfiles: [],
-      customImage: null,
-      isUsingCustomImage: false,
-      currentProfileIndex: 0,
-      isMobile: false,
-      textElements: [],
-      initialTextsAdded: false // 新增標記，用於追蹤初始文字是否已添加
-    };
-    
-    // 檢測是否為移動設備
-    function checkMobile() {
-      state.isMobile = window.innerWidth <= 768 || 
-                      ('ontouchstart' in window) || 
-                      (navigator.maxTouchPoints > 0) || 
-                      (navigator.msMaxTouchPoints > 0);
+    // 初始化
+    function initializeApp() {
+      // 綁定事件
+      enterButton.addEventListener('click', startApp);
+      exitButton.addEventListener('click', () => window.close());
+      addTextButton.addEventListener('click', addCustomText);
+      randomTextButton.addEventListener('click', addRandomText);
+      shootButton.addEventListener('click', toggleAimMode);
+      cleanButton.addEventListener('click', cleanCanvas);
+      customModeButton.addEventListener('click', showCustomImageModal);
+      exitAimModeButton.addEventListener('click', exitAimMode);
+      enlargeTextButton.addEventListener('click', enlargeSelectedText);
+      shrinkTextButton.addEventListener('click', shrinkSelectedText);
+      deleteTextButton.addEventListener('click', deleteSelectedText);
+      mobileEnlargeTextButton.addEventListener('click', enlargeSelectedText);
+      mobileShrinkTextButton.addEventListener('click', shrinkSelectedText);
+      mobileDeleteTextButton.addEventListener('click', deleteSelectedText);
+      customImageInput.addEventListener('change', handleCustomImageSelect);
+      applyCustomImageButton.addEventListener('click', applyCustomImage);
+      resetDefaultImageButton.addEventListener('click', resetToDefaultImage);
+      cancelCustomImageButton.addEventListener('click', hideCustomImageModal);
+      profileSwitcher.addEventListener('click', switchProfile);
+      helpButton.addEventListener('click', showHelpModal);
+      closeHelpButton.addEventListener('click', hideHelpModal);
+      
+      // 點擊畫布外區域隱藏文字控制按鈕
+      document.addEventListener('click', hideTextControlsOnOutsideClick);
+      
+      // 監聽窗口大小變化，調整畫布大小
+      window.addEventListener('resize', resizeCanvas);
     }
-    
-    // 事件初始化
-    els.enterBtn.addEventListener('click', () => {
-      els.warningScreen.style.display = 'none';
-      els.loadingScreen.style.display = 'flex';
-      preloadAssets();
-    });
-    
-    els.exitBtn.addEventListener('click', () => window.location.href = 'https://www.google.com');
-    
-    // 幫助按鈕功能
-    els.helpButton.addEventListener('click', () => els.helpModal.style.display = 'flex');
-    els.closeHelp.addEventListener('click', () => els.helpModal.style.display = 'none');
-    
-    // 自定義照片功能
-    els.customModeBtn.addEventListener('click', () => els.customImageModal.style.display = 'flex');
-    
-    els.customImageInput.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          els.customImagePreview.src = event.target.result;
-          els.customImagePreview.style.display = 'block';
-          els.applyCustomImage.disabled = false;
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-    
-    els.applyCustomImage.addEventListener('click', () => {
-      state.customImage = new Image();
-      state.customImage.onload = () => {
-        state.isUsingCustomImage = true;
-        cleanCanvas();
-        els.customImageModal.style.display = 'none';
-      };
-      state.customImage.src = els.customImagePreview.src;
-    });
-    
-    els.resetDefaultImage.addEventListener('click', () => {
-      state.isUsingCustomImage = false;
-      cleanCanvas();
-      els.customImageModal.style.display = 'none';
-      els.customImagePreview.style.display = 'none';
-      els.customImageInput.value = '';
-      els.applyCustomImage.disabled = true;
-    });
-    
-    els.cancelCustomImage.addEventListener('click', () => els.customImageModal.style.display = 'none');
-    
-    // 切換預設照片功能
-    els.profileSwitcher.addEventListener('click', switchProfile);
-    
-    function switchProfile() {
-      if (state.isUsingCustomImage) {
-        state.isUsingCustomImage = false;
-      }
+
+    // 開始應用
+    function startApp() {
+      warningScreen.style.display = 'none';
+      loadingScreen.style.display = 'flex';
       
-      state.currentProfileIndex = (state.currentProfileIndex + 1) % profileImages.length;
-      state.baseImage.src = profileImages[state.currentProfileIndex];
-      
-      // 保存當前文字元素
-      const savedTextElements = [...state.textElements];
-      
-      // 清除畫布但不清除文字
-      cleanCanvasOnly();
-      
-      // 恢復文字元素
-      state.textElements = savedTextElements;
+      // 預加載資源
+      preloadAssets().then(() => {
+        loadingScreen.style.display = 'none';
+        
+        // 設置初始圖片
+        mainCanvas.src = `images/profiles/1.png`;
+        
+        // 調整畫布大小
+        resizeCanvas();
+        
+        // 添加初始文字
+        if (!state.initialTextsAdded) {
+          addText('賤貨', 30, 30);
+          addText('母狗', canvasContainer.offsetWidth - 100, 30);
+          state.initialTextsAdded = true;
+        }
+      });
     }
-    
-    function preloadAssets() {
-      const totalAssets = cumImages.length + profileImages.length;
+
+    // 預加載資源
+    async function preloadAssets() {
+      const totalAssets = state.totalProfiles + 15; // 預設照片 + 精液圖片
       let loadedAssets = 0;
       
-      // 檢測是否為移動設備
-      checkMobile();
-      
-      // 預加載第一張預設圖片作為基本圖片
-      state.baseImage.onload = assetLoaded;
-      state.baseImage.src = profileImages[0];
-      
-      // 預加載所有精液圖片
-      cumImages.forEach(src => {
+      // 預加載預設照片
+      const profilePromises = [];
+      for (let i = 1; i <= state.totalProfiles; i++) {
         const img = new Image();
-        img.onload = assetLoaded;
-        img.onerror = assetLoaded;
-        img.src = src;
-        state.preloadedImages.push(img);
-      });
-      
-      // 預加載所有預設圖片
-      profileImages.forEach((src, index) => {
-        if (index > 0) { // 第一張已經作為baseImage加載
-          const img = new Image();
-          img.onload = assetLoaded;
-          img.onerror = assetLoaded;
-          img.src = src;
-          state.preloadedProfiles.push(img);
-        }
-      });
-      
-      function assetLoaded() {
-        loadedAssets++;
-        const progress = Math.floor((loadedAssets / totalAssets) * 100);
-        els.progressBar.style.width = progress + '%';
-        els.progressText.textContent = progress + '%';
+        const promise = new Promise((resolve) => {
+          img.onload = () => {
+            loadedAssets++;
+            updateProgress(loadedAssets, totalAssets);
+            resolve();
+          };
+          img.onerror = () => {
+            loadedAssets++;
+            updateProgress(loadedAssets, totalAssets);
+            resolve();
+          };
+        });
         
-        if (loadedAssets >= totalAssets) {
-          setTimeout(() => {
-            els.loadingScreen.style.display = 'none';
-            initializeApp();
-          }, 500);
+        // 根據檔案類型設置不同的路徑
+        if (i <= 3) {
+          img.src = `images/profiles/${i}.png`;
+        } else if (i === 4) {
+          img.src = `images/profiles/${i}.jpeg`;
+        } else {
+          img.src = `images/profiles/${i}.jpg`;
         }
+        
+        profilePromises.push(promise);
       }
-    }
-    
-    function initializeApp() {
-      resizeCanvas();
-      window.addEventListener('resize', () => {
-        checkMobile();
-        resizeCanvas();
-      });
-      setupEventListeners();
       
-      // 只在首次初始化時添加初始文字
-      if (!state.initialTextsAdded) {
-        addInitialTexts();
-        state.initialTextsAdded = true;
+      // 預加載精液圖片
+      const cumPromises = [];
+      for (let i = 1; i <= 15; i++) {
+        const img = new Image();
+        const promise = new Promise((resolve) => {
+          img.onload = () => {
+            loadedAssets++;
+            updateProgress(loadedAssets, totalAssets);
+            resolve();
+          };
+          img.onerror = () => {
+            loadedAssets++;
+            updateProgress(loadedAssets, totalAssets);
+            resolve();
+          };
+        });
+        img.src = `images/cum/${i}.png`;
+        cumPromises.push(promise);
       }
+      
+      // 等待所有資源加載完成
+      await Promise.all([...profilePromises, ...cumPromises]);
     }
-    
+
+    // 更新進度條
+    function updateProgress(loaded, total) {
+      const percentage = Math.floor((loaded / total) * 100);
+      progressBar.style.width = `${percentage}%`;
+      progressText.textContent = `${percentage}%`;
+    }
+
+    // 調整畫布大小
     function resizeCanvas() {
-      const sourceImage = state.isUsingCustomImage ? state.customImage : state.baseImage;
+      const containerWidth = canvasContainer.offsetWidth;
+      const containerHeight = canvasContainer.offsetHeight;
       
-      if (!sourceImage || !sourceImage.complete) return;
+      // 獲取圖片的原始尺寸
+      const imgWidth = mainCanvas.naturalWidth || containerWidth;
+      const imgHeight = mainCanvas.naturalHeight || containerHeight;
       
-      // 獲取容器尺寸
-      const containerWidth = els.canvasContainer.clientWidth;
-      const containerHeight = window.innerHeight * (state.isMobile ? 0.65 : 0.75);
+      // 計算縮放比例
+      const scale = Math.min(
+        containerWidth / imgWidth,
+        containerHeight / imgHeight
+      );
       
-      // 計算圖片的原始寬高比
-      const imageRatio = sourceImage.width / sourceImage.height;
+      // 計算新尺寸
+      const newWidth = imgWidth * scale;
+      const newHeight = imgHeight * scale;
       
-      // 計算適合容器的尺寸，保持原始比例
-      let canvasWidth, canvasHeight;
+      // 計算居中位置
+      const left = (containerWidth - newWidth) / 2;
+      const top = (containerHeight - newHeight) / 2;
       
-      if (containerWidth / containerHeight > imageRatio) {
-        // 容器較寬，以高度為基準
-        canvasHeight = containerHeight;
-        canvasWidth = containerHeight * imageRatio;
-      } else {
-        // 容器較高，以寬度為基準
-        canvasWidth = containerWidth;
-        canvasHeight = containerWidth / imageRatio;
-      }
-      
-      // 設置canvas尺寸
-      canvas.width = canvasWidth;
-      canvas.height = canvasHeight;
-      
-      // 清除canvas
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      // 繪製圖片，確保完全填充canvas並居中
-      if (state.isUsingCustomImage) {
-        // 計算縮放比例
-        const scale = Math.min(canvasWidth / sourceImage.width, canvasHeight / sourceImage.height);
-        const scaledWidth = sourceImage.width * scale;
-        const scaledHeight = sourceImage.height * scale;
-        
-        // 計算居中位置
-        const x = (canvasWidth - scaledWidth) / 2;
-        const y = (canvasHeight - scaledHeight) / 2;
-        
-        ctx.drawImage(sourceImage, x, y, scaledWidth, scaledHeight);
-      } else {
-        // 預設圖片直接填充整個canvas
-        ctx.drawImage(sourceImage, 0, 0, canvasWidth, canvasHeight);
-      }
-    }
-    
-    function setupEventListeners() {
-      els.shoot.addEventListener('click', startAimMode);
-      els.exitAim.addEventListener('click', exitAimMode);
-      els.canvasContainer.addEventListener('mousemove', handleAim);
-      els.canvasContainer.addEventListener('touchmove', handleAim);
-      canvas.addEventListener('click', handleShoot);
-      canvas.addEventListener('touchend', handleShoot);
-      els.clean.addEventListener('click', cleanCanvas);
-      els.addText.addEventListener('click', addCustomText);
-      els.randomText.addEventListener('click', addRandomText);
-      els.textInput.addEventListener('keyup', e => e.key === 'Enter' && addCustomText());
-      
-      // 桌面版文字控制按鈕
-      els.enlargeText.addEventListener('click', enlargeSelectedText);
-      els.shrinkText.addEventListener('click', shrinkSelectedText);
-      els.deleteText.addEventListener('click', deleteSelectedText);
-      
-      // 手機版文字控制按鈕
-      els.mobileEnlargeText.addEventListener('click', enlargeSelectedText);
-      els.mobileShrinkText.addEventListener('click', shrinkSelectedText);
-      els.mobileDeleteText.addEventListener('click', deleteSelectedText);
-      
-      document.addEventListener('click', hideTextControlsOnOutsideClick);
-    }
-    
-    function getMousePos(evt) {
-      const rect = canvas.getBoundingClientRect();
-      const scaleX = canvas.width / rect.width;
-      const scaleY = canvas.height / rect.height;
-      const clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
-      const clientY = evt.touches ? evt.touches[0].clientY : evt.clientY;
-      
-      return {
-        x: (clientX - rect.left) * scaleX,
-        y: (clientY - rect.top) * scaleY
-      };
+      // 設置畫布尺寸和位置
+      mainCanvas.style.width = `${newWidth}px`;
+      mainCanvas.style.height = `${newHeight}px`;
+      mainCanvas.style.position = 'absolute';
+      mainCanvas.style.left = `${left}px`;
+      mainCanvas.style.top = `${top}px`;
     }
 
-    function addInitialTexts() {
-      addTextToImage("賤貨", 20, 20);
-      addTextToImage("母狗", 70, 30);
-    }
-    
+    // 添加自定義文字
     function addCustomText() {
-      const text = els.textInput.value.trim();
+      const text = customTextInput.value.trim();
       if (text) {
-        addTextToImage(text);
-        els.textInput.value = '';
+        const x = Math.random() * (canvasContainer.offsetWidth - 100);
+        const y = Math.random() * (canvasContainer.offsetHeight - 50);
+        addText(text, x, y);
+        customTextInput.value = '';
       }
     }
-    
+
+    // 添加隨機文字
     function addRandomText() {
-      const randomText = randomTexts[Math.floor(Math.random() * randomTexts.length)];
-      addTextToImage(randomText);
+      const randomIndex = Math.floor(Math.random() * randomTexts.length);
+      const text = randomTexts[randomIndex];
+      const x = Math.random() * (canvasContainer.offsetWidth - 100);
+      const y = Math.random() * (canvasContainer.offsetHeight - 50);
+      addText(text, x, y);
     }
 
-    function addTextToImage(text, left = null, top = null) {
-      const textElement = document.createElement('span');
-      textElement.classList.add('target-text');
+    // 添加文字
+    function addText(text, x, y) {
+      const textElement = document.createElement('div');
+      textElement.className = 'target-text';
       textElement.textContent = text;
-      textElement.style.left = left ? `${left}%` : `${Math.random() * 80}%`;
-      textElement.style.top = top ? `${top}%` : `${Math.random() * 80}%`;
-      els.canvasContainer.appendChild(textElement);
+      textElement.style.left = `${x}px`;
+      textElement.style.top = `${y}px`;
+      textElement.style.fontSize = '24px';
       
-      // 將文字元素添加到追蹤數組
-      state.textElements.push(textElement);
+      // 添加拖動功能
+      textElement.addEventListener('mousedown', startDragText);
+      textElement.addEventListener('touchstart', startDragText, { passive: false });
       
-      let isDragging = false, startX, startY;
-      
-      textElement.addEventListener('mousedown', startDrag);
-      textElement.addEventListener('touchstart', startDrag);
-      document.addEventListener('mousemove', drag);
-      document.addEventListener('touchmove', drag);
-      document.addEventListener('mouseup', stopDrag);
-      document.addEventListener('touchend', stopDrag);
-      textElement.addEventListener('click', e => {
+      // 點擊文字顯示控制按鈕
+      textElement.addEventListener('click', (e) => {
         e.stopPropagation();
-        state.selectedText = textElement;
-        showTextControls(textElement);
+        selectText(textElement);
       });
       
-      function startDrag(e) {
-        isDragging = true;
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-        startX = clientX - textElement.offsetLeft;
-        startY = clientY - textElement.offsetTop;
-        e.preventDefault();
-      }
-      
-      function drag(e) {
-        if (!isDragging) return;
-        e.preventDefault();
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-        
-        if (clientX && clientY) {
-          textElement.style.left = `${clientX - startX}px`;
-          textElement.style.top = `${clientY - startY}px`;
-        }
-      }
-      
-      function stopDrag() {
-        isDragging = false;
-      }
+      canvasContainer.appendChild(textElement);
+      state.textElements.push(textElement);
     }
-    
-    function showTextControls(textElement) {
-      if (state.isAiming) return;
+
+    // 開始拖動文字
+    function startDragText(e) {
+      e.preventDefault();
       
-      // 檢查是否為移動設備
+      // 如果在瞄準模式，不允許拖動
+      if (state.isAimMode) return;
+      
+      // 選中當前文字
+      selectText(e.target);
+      
+      const textElement = e.target;
+      let startX, startY;
+      
+      // 獲取起始位置
+      if (e.type === 'mousedown') {
+        startX = e.clientX;
+        startY = e.clientY;
+      } else if (e.type === 'touchstart') {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+      }
+      
+      // 當前文字位置
+      const startLeft = parseInt(textElement.style.left) || 0;
+      const startTop = parseInt(textElement.style.top) || 0;
+      
+      // 移動處理函數
+      function moveHandler(moveEvent) {
+        let currentX, currentY;
+        
+        if (moveEvent.type === 'mousemove') {
+          currentX = moveEvent.clientX;
+          currentY = moveEvent.clientY;
+        } else if (moveEvent.type === 'touchmove') {
+          currentX = moveEvent.touches[0].clientX;
+          currentY = moveEvent.touches[0].clientY;
+        }
+        
+        // 計算位移
+        const deltaX = currentX - startX;
+        const deltaY = currentY - startY;
+        
+        // 更新位置
+        textElement.style.left = `${startLeft + deltaX}px`;
+        textElement.style.top = `${startTop + deltaY}px`;
+      }
+      
+      // 結束拖動處理函數
+      function endHandler() {
+        document.removeEventListener('mousemove', moveHandler);
+        document.removeEventListener('touchmove', moveHandler);
+        document.removeEventListener('mouseup', endHandler);
+        document.removeEventListener('touchend', endHandler);
+      }
+      
+      // 添加事件監聽
+      document.addEventListener('mousemove', moveHandler);
+      document.addEventListener('touchmove', moveHandler, { passive: false });
+      document.addEventListener('mouseup', endHandler);
+      document.addEventListener('touchend', endHandler);
+    }
+
+    // 選中文字
+    function selectText(textElement) {
+      // 取消之前選中的文字
+      if (state.selectedText) {
+        state.selectedText.style.border = 'none';
+        state.selectedText.style.padding = '0';
+      }
+      
+      // 選中新文字
+      state.selectedText = textElement;
+      textElement.style.border = '1px dashed white';
+      textElement.style.padding = '2px';
+      
+      // 顯示控制按鈕
+      showTextControls();
+    }
+
+    // 顯示文字控制按鈕
+    function showTextControls() {
       if (state.isMobile) {
         // 在手機上顯示底部控制按鈕
-        els.mobileTextControls.style.display = 'flex';
+        mobileTextControls.style.display = 'flex';
       } else {
-        // 在桌面上顯示左上角控制按鈕
-        els.enlargeText.style.display = 'block';
-        els.shrinkText.style.display = 'block';
-        els.deleteText.style.display = 'block';
+        // 在桌面上顯示左側控制按鈕
+        enlargeTextButton.style.display = 'block';
+        shrinkTextButton.style.display = 'block';
+        deleteTextButton.style.display = 'block';
       }
     }
-    
+
+    // 隱藏文字控制按鈕
     function hideTextControls() {
-      state.selectedText = null;
+      enlargeTextButton.style.display = 'none';
+      shrinkTextButton.style.display = 'none';
+      deleteTextButton.style.display = 'none';
+      mobileTextControls.style.display = 'none';
       
-      // 隱藏桌面版控制按鈕
-      els.enlargeText.style.display = 'none';
-      els.shrinkText.style.display = 'none';
-      els.deleteText.style.display = 'none';
-      
-      // 隱藏手機版控制按鈕
-      els.mobileTextControls.style.display = 'none';
+      if (state.selectedText) {
+        state.selectedText.style.border = 'none';
+        state.selectedText.style.padding = '0';
+        state.selectedText = null;
+      }
     }
-    
+
+    // 點擊畫布外區域隱藏文字控制按鈕
     function hideTextControlsOnOutsideClick(e) {
-      if (!e.target.classList.contains('target-text') && 
-          !e.target.id.includes('text') && 
-          e.target.id !== 'enlarge-text' && 
-          e.target.id !== 'shrink-text' && 
-          e.target.id !== 'delete-text' &&
-          e.target.id !== 'mobile-enlarge-text' && 
-          e.target.id !== 'mobile-shrink-text' && 
-          e.target.id !== 'mobile-delete-text') {
+      if (
+        !e.target.classList.contains('target-text') &&
+        e.target !== enlargeTextButton &&
+        e.target !== shrinkTextButton &&
+        e.target !== deleteTextButton &&
+        e.target !== mobileEnlargeTextButton &&
+        e.target !== mobileShrinkTextButton &&
+        e.target !== mobileDeleteTextButton
+      ) {
         hideTextControls();
       }
     }
-    
+
+    // 放大選中文字
     function enlargeSelectedText() {
       if (state.selectedText) {
-        const currentSize = window.getComputedStyle(state.selectedText).fontSize;
-        state.selectedText.style.fontSize = `${parseFloat(currentSize) + 2}px`;
+        const currentSize = parseInt(state.selectedText.style.fontSize);
+        state.selectedText.style.fontSize = `${currentSize + 2}px`;
       }
     }
-    
+
+    // 縮小選中文字
     function shrinkSelectedText() {
       if (state.selectedText) {
-        const currentSize = window.getComputedStyle(state.selectedText).fontSize;
-        state.selectedText.style.fontSize = `${Math.max(parseFloat(currentSize) - 2, 10)}px`;
+        const currentSize = parseInt(state.selectedText.style.fontSize);
+        if (currentSize > 10) {
+          state.selectedText.style.fontSize = `${currentSize - 2}px`;
+        }
       }
     }
-    
+
+    // 刪除選中文字
     function deleteSelectedText() {
       if (state.selectedText) {
-        // 從追蹤數組中移除
-        const index = state.textElements.indexOf(state.selectedText);
-        if (index > -1) {
-          state.textElements.splice(index, 1);
-        }
-        
-        state.selectedText.remove();
+        canvasContainer.removeChild(state.selectedText);
+        state.textElements = state.textElements.filter(el => el !== state.selectedText);
         state.selectedText = null;
         hideTextControls();
       }
     }
-    
-    function startAimMode() {
-      state.isAiming = true;
+
+    // 切換瞄準模式
+    function toggleAimMode() {
+      state.isAimMode = !state.isAimMode;
       
-      // 不論是否為移動設備，都顯示提示而不顯示準心
-      els.shootingTip.style.display = 'block';
-      els.shootingTip.textContent = '點擊圖片任意位置進行射精';
-      setTimeout(() => {
-        els.shootingTip.style.display = 'none';
-      }, 2000);
-      
-      els.exitAim.style.display = 'block';
-      hideTextControls();
+      if (state.isAimMode) {
+        // 進入瞄準模式
+        exitAimModeButton.style.display = 'block';
+        
+        // 在手機上顯示提示，不顯示準心
+        if (state.isMobile) {
+          shootingTip.style.display = 'block';
+          setTimeout(() => {
+            shootingTip.style.display = 'none';
+          }, 2000);
+        } else {
+          // 在桌面上顯示準心
+          aimCircle.style.display = 'block';
+          document.addEventListener('mousemove', handleAim);
+        }
+        
+        // 添加點擊事件
+        mainCanvas.addEventListener('click', handleShoot);
+        mainCanvas.addEventListener('touchend', handleShoot);
+      } else {
+        // 退出瞄準模式
+        exitAimMode();
+      }
     }
-    
+
+    // 退出瞄準模式
     function exitAimMode() {
-      state.isAiming = false;
-      els.aimCircle.style.display = 'none';
-      els.shootingTip.style.display = 'none';
-      els.exitAim.style.display = 'none';
-      els.canvasContainer.style.cursor = 'default';
+      state.isAimMode = false;
+      aimCircle.style.display = 'none';
+      exitAimModeButton.style.display = 'none';
+      document.removeEventListener('mousemove', handleAim);
+      mainCanvas.removeEventListener('click', handleShoot);
+      mainCanvas.removeEventListener('touchend', handleShoot);
     }
-    
+
+    // 處理瞄準
     function handleAim(e) {
-      // 不再顯示準心，所以這個函數不需要做任何事情
-      return;
+      // 獲取鼠標相對於畫布容器的位置
+      const rect = canvasContainer.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      // 更新準心位置，考慮準心的寬高
+      const aimWidth = aimCircle.offsetWidth;
+      const aimHeight = aimCircle.offsetHeight;
+      aimCircle.style.left = `${x - aimWidth/2}px`;
+      aimCircle.style.top = `${y - aimHeight/2}px`;
     }
-    
+
+    // 處理射擊
     function handleShoot(e) {
-      if (!state.isAiming) return;
+      e.preventDefault();
       
-      const pos = getMousePos(e);
-      createSplash(pos.x, pos.y);
+      // 獲取點擊位置
+      let x, y;
+      
+      if (e.type === 'click') {
+        x = e.clientX;
+        y = e.clientY;
+      } else if (e.type === 'touchend') {
+        // 使用最後一個觸摸點的位置
+        const touch = e.changedTouches[e.changedTouches.length - 1];
+        x = touch.clientX;
+        y = touch.clientY;
+      }
+      
+      // 獲取相對於畫布容器的位置
+      const rect = canvasContainer.getBoundingClientRect();
+      const relX = x - rect.left;
+      const relY = y - rect.top;
+      
+      // 創建精液效果
+      createSplash(relX, relY);
     }
-    
+
+    // 創建精液效果
     function createSplash(x, y) {
-      // 獲取當前精液圖片
-      const cumImg = state.preloadedImages[state.currentCumIndex];
+      // 隨機選擇精液圖片
+      const randomIndex = Math.floor(Math.random() * 15) + 1;
+      const splashImg = document.createElement('img');
+      splashImg.src = `images/cum/${randomIndex}.png`;
+      splashImg.style.position = 'absolute';
       
-      // 精液飛濺效果尺寸 - 縮小尺寸
-      const size = Math.random() * 50 + 70; // 從 80+120 改為 50+70
+      // 隨機大小
+      const size = Math.random() * 50 + 70; // 縮小精液尺寸
+      splashImg.style.width = `${size}px`;
+      splashImg.style.height = 'auto';
       
-      // 使用source-atop確保只在非透明區域顯示精液
-      ctx.globalCompositeOperation = 'source-atop';
-      ctx.drawImage(cumImg, x - size / 2, y - size / 2, size, size);
-      ctx.globalCompositeOperation = 'source-over';
+      // 設置位置，居中顯示
+      splashImg.style.left = `${x - size/2}px`;
+      splashImg.style.top = `${y - size/2}px`;
       
-      // 循環使用精液圖片
-      state.currentCumIndex = (state.currentCumIndex + 1) % state.preloadedImages.length;
+      // 設置z-index確保在文字上方
+      splashImg.style.zIndex = '5';
+      
+      // 添加到畫布容器
+      canvasContainer.appendChild(splashImg);
+    }
+
+    // 清除畫布
+    function cleanCanvas() {
+      // 移除所有精液圖片
+      const splashImages = canvasContainer.querySelectorAll('img:not(#main-canvas)');
+      splashImages.forEach(img => canvasContainer.removeChild(img));
+      
+      // 移除所有文字
+      state.textElements.forEach(el => canvasContainer.removeChild(el));
+      state.textElements = [];
+      state.selectedText = null;
+      
+      // 隱藏控制按鈕
+      hideTextControls();
+      
+      // 重置初始文字標記
+      state.initialTextsAdded = false;
+      
+      // 添加初始文字
+      addText('賤貨', 30, 30);
+      addText('母狗', canvasContainer.offsetWidth - 100, 30);
+      state.initialTextsAdded = true;
     }
     
     // 只清除畫布，不清除文字
     function cleanCanvasOnly() {
-      // 重新調整並繪製canvas
-      resizeCanvas();
-      
-      // 退出瞄準模式
-      exitAimMode();
+      // 移除所有精液圖片
+      const splashImages = canvasContainer.querySelectorAll('img:not(#main-canvas)');
+      splashImages.forEach(img => canvasContainer.removeChild(img));
     }
-    
-    // 清除畫布和所有文字
-    function cleanCanvas() {
-      // 清除所有文字元素
-      state.textElements.forEach(element => {
-        if (element && element.parentNode) {
-          element.remove();
-        }
-      });
-      
-      // 清空文字元素數組
-      state.textElements = [];
-      
-      // 重新調整並繪製canvas
-      resizeCanvas();
-      
-      // 退出瞄準模式
-      exitAimMode();
-      
-      // 隱藏文字控制按鈕
-      hideTextControls();
+
+    // 顯示自定義圖片模態框
+    function showCustomImageModal() {
+      customImageModal.style.display = 'flex';
     }
+
+    // 隱藏自定義圖片模態框
+    function hideCustomImageModal() {
+      customImageModal.style.display = 'none';
+      customImagePreview.style.display = 'none';
+      customImagePreview.src = '';
+      applyCustomImageButton.disabled = true;
+    }
+
+    // 處理自定義圖片選擇
+    function handleCustomImageSelect(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          customImagePreview.src = event.target.result;
+          customImagePreview.style.display = 'block';
+          applyCustomImageButton.disabled = false;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // 應用自定義圖片
+    function applyCustomImage() {
+      if (customImagePreview.src) {
+        mainCanvas.src = customImagePreview.src;
+        resizeCanvas();
+        hideCustomImageModal();
+      }
+    }
+
+    // 重置為預設圖片
+    function resetToDefaultImage() {
+      mainCanvas.src = `images/profiles/${state.currentProfile}.png`;
+      resizeCanvas();
+      hideCustomImageModal();
+    }
+
+    // 切換預設照片
+    function switchProfile() {
+      // 保存當前文字元素
+      const currentTexts = [...state.textElements];
+      
+      // 切換到下一個預設照片
+      state.currentProfile = (state.currentProfile % state.totalProfiles) + 1;
+      
+      // 根據檔案類型設置不同的路徑
+      let profilePath;
+      if (state.currentProfile <= 3) {
+        profilePath = `images/profiles/${state.currentProfile}.png`;
+      } else if (state.currentProfile === 4) {
+        profilePath = `images/profiles/${state.currentProfile}.jpeg`;
+      } else {
+        profilePath = `images/profiles/${state.currentProfile}.jpg`;
+      }
+      
+      // 更新圖片
+      mainCanvas.src = profilePath;
+      
+      // 清除畫布上的精液，但保留文字
+      cleanCanvasOnly();
+      
+      // 調整畫布大小
+      resizeCanvas();
+    }
+
+    // 顯示幫助模態框
+    function showHelpModal() {
+      helpModal.style.display = 'block';
+    }
+
+    // 隱藏幫助模態框
+    function hideHelpModal() {
+      helpModal.style.display = 'none';
+    }
+
+    // 初始化應用
+    initializeApp();
   </script>
 </body>
 </html>
