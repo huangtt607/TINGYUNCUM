@@ -95,8 +95,8 @@
     }
     #fixed-controls {
       position: fixed; 
-      top: 10px; 
-      left: 50px; /* 從10px改為50px，使按鈕不貼邊 */
+      bottom: 70px; 
+      left: 20px; /* 調整位置，與底部按鈕對齊 */
       z-index: 1000;
       display: flex; 
       flex-direction: column;
@@ -106,8 +106,8 @@
       padding: 8px 10px; border-radius: 5px; cursor: pointer;
       margin-bottom: 5px; font-size: 14px; display: none;
       opacity: 0.8;
-      text-align: left;
-      width: 140px; /* 固定寬度，使所有按鈕大小一致 */
+      text-align: center;
+      width: calc(25% - 8px); /* 與底部按鈕寬度一致 */
     }
     #fixed-controls button:hover {
       opacity: 1;
@@ -209,9 +209,11 @@
       border-radius: 10px;
       max-width: 800px;
       width: 90%;
-      margin: 30px auto; /* 增加上下邊距，確保內容不會貼邊 */
+      margin: 60px auto 30px auto; /* 增加頂部邊距，確保內容不會超出畫面 */
       border: 1px solid #ff1493;
       position: relative; /* 添加相對定位 */
+      max-height: 80vh; /* 限制最大高度 */
+      overflow-y: auto; /* 添加垂直滾動 */
     }
     #help-modal .feature-section {
       margin-bottom: 20px;
@@ -255,19 +257,17 @@
     /* 右側功能按鈕 */
     .right-controls {
       position: fixed;
-      top: 10px;
-      right: 50px; /* 從10px改為50px，使按鈕不貼邊 */
+      bottom: 70px;
+      right: 20px; /* 調整位置，與底部按鈕對齊 */
       z-index: 100;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
+      display: none; /* 隱藏這個容器，因為幫助按鈕已經單獨定位 */
     }
     
     /* 切換照片按鈕 */
     #profile-switcher {
       position: fixed;
-      bottom: 15px;
-      right: 50px; /* 從15px改為50px，使按鈕不貼邊 */
+      bottom: 70px;
+      right: 70px; /* 調整位置，與底部按鈕對齊 */
       z-index: 100;
       background-color: rgba(255, 105, 180, 0.7);
       border-radius: 50%;
@@ -302,6 +302,9 @@
       border: 2px solid white;
       box-shadow: 0 2px 5px rgba(0,0,0,0.3);
       margin-bottom: 10px;
+      position: fixed;
+      bottom: 70px;
+      right: 20px;
     }
     #help-button:hover {
       background-color: rgba(255, 20, 147, 0.9);
@@ -326,7 +329,7 @@
     /* 手機版文字控制按鈕 */
     .mobile-text-controls {
       position: fixed;
-      bottom: 70px;
+      bottom: 130px;
       left: 50%;
       transform: translateX(-50%);
       display: none;
@@ -371,10 +374,15 @@
         display: none; /* 在手機上隱藏桌面版控制按鈕 */
       }
       .right-controls {
-        right: 20px; /* 在手機上減小右側邊距 */
+        display: none;
+      }
+      #help-button {
+        right: 15px;
+        bottom: 70px;
       }
       #profile-switcher {
-        right: 20px; /* 在手機上減小右側邊距 */
+        right: 65px;
+        bottom: 70px;
       }
       .small-button { 
         width: calc(50% - 4px); /* 在手機上每行顯示兩個按鈕 */
