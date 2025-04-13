@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="黃庭筠的個人互動體驗網站，提供獨特的視覺互動效果和自定義功能。">
+  <meta name="keywords" content="黃庭筠,互動體驗,視覺效果,自定義功能,個人網站">
+  <meta name="author" content="黃庭筠">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="黃庭筠的互動體驗">
+  <meta property="og:description" content="黃庭筠的個人互動體驗網站，提供獨特的視覺互動效果和自定義功能。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://huangtt607.github.io/TINGYUNCUM/">
+  <meta property="og:image" content="images/1234567.png">
+  <title>黃庭筠的互動體驗</title>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9FVCBCYPZF"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-9FVCBCYPZF');
+  </script>
+  <style>
+    body, html {
+      margin: 0; padding: 0; height: 100%;
+      font-family: 'Microsoft JhengHei', Arial, sans-serif;
+      background-color: #ff69b4; color: #fff;
+      overflow-x: hidden; display: flex; flex-direction: column;
+    }
+    .container {
+      max-width: 480px; padding: 5px; box-sizing: border-box;
+      text-align: center; margin: 0 auto;
+      display: flex; flex-direction: column; height: 100%;
+    }
+    h1 { 
+      font-size: 20px; 
+      margin: 3px 0; 
+      line-height: 1.1; 
+      z-index: 2; 
+      position: relative; 
+    }
+    .subtitle { 
+      font-size: 14px; 
+      margin: 3px 0 10px 0; 
+      line-height: 1.1; 
+      z-index: 2; 
+      position: relative; 
+    }
+    #canvas-container {
+      position: relative; width: 100%; max-width: 400px;
+      margin: 0 auto 8px auto; flex: 1;
+      display: flex; align-items: center; justify-content: center;
+    }
+    #main-canvas {
+      max-width: 100%;
+      height: auto;
+      display: block; 
+      border-radius: 10px;
+    }
+    .target-text {
+      position: absolute; color: #ff1493; font-weight: bold;
+      font-size: 14px; text-shadow: 1px 1px 2px black;
+      cursor: move; user-select: none; z-index: 10;
+    }
+    #aim-circle {
+      position: absolute; border: 2px solid red; border-radius: 50%;
+      width: 40px; height: 40px; pointer-events: none;
+      display: none; transform: translate(-50%, -50%);
+      z-index: 20;
+    }
+    #aim-center {
+      position: absolute; background-color: red; width: 4px; height: 4px;
+      border-radius: 50%; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .button {
+      display: inline-block; padding: 6px 0; background-color: #ff1493;
+      color: white; text-align: center; text-decoration: none;
+      font-size: 12px; border-radius: 5px; border: none; cursor: pointer;
+    }
+    .small-button { width: calc(25% - 4px); margin: 0 2px 4px 0; }
+    #fixed-controls {
+      position: fixed; top: 5px; right: 5px; z-index: 1000;
+      display: flex; flex-direction: column;
+    }
+    #fixed-controls button {
+      background-color: #ff1493; color: white; border: none;
+      padding: 6px 8px; border-radius: 5px; cursor: pointer;
+      margin-bottom: 3px; font-size: 12px; display: none;
+    }
+    .controls-footer { width: 100%; margin-top: auto; }
+    .info { 
+      font-size: 12px; line-height: 1.2; margin: 3px 0;
+      padding: 0 5px; color: rgba(255, 255, 255, 0.8);
+    }
+    .input-group { display: flex; margin-bottom: 4px; }
+    #custom-text-input {
+      flex: 1; padding: 6px; border: none; border-radius: 5px 0 0 5px;
+      box-sizing: border-box; font-size: 12px; height: 28px;
+    }
+    #add-text-button {
+      width: 80px; border-radius: 0 5px 5px 0; margin: 0;
+    }
+    .controls-container {
+      display: flex; flex-wrap: wrap; justify-content: space-between;
+    }
+    .screen {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.9); display: flex;
+      flex-direction: column; justify-content: center; align-items: center;
+      z-index: 9999;
+    }
+    #warning-screen { z-index: 10000; padding: 20px; box-sizing: border-box; text-align: center; }
+    #warning-screen h2 { color: red; font-size: 28px; margin-bottom: 20px; }
+    #warning-screen p { color: white; font-size: 16px; margin-bottom: 30px; max-width: 600px; }
+    .action-button {
+      padding: 12px 30px; background-color: #ff1493; color: white;
+      border: none; border-radius: 5px; font-size: 18px;
+      cursor: pointer; margin: 10px;
+    }
+    #exit-button { background-color: #666; }
+    .spinner {
+      border: 5px solid #f3f3f3; border-top: 5px solid #ff1493;
+      border-radius: 50%; width: 50px; height: 50px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .progress-container {
+      width: 80%; max-width: 300px; background-color: #444;
+      border-radius: 10px; margin-top: 20px;
+    }
+    #progress-bar {
+      height: 20px; background-color: #ff1493; border-radius: 10px;
+      width: 0%; transition: width 0.3s;
+    }
+    #progress-text { color: white; margin-top: 5px; font-size: 14px; }
+    #custom-image-modal {
+      display: none; position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.9);
+      z-index: 10001; flex-direction: column;
+      justify-content: center; align-items: center; padding: 20px;
+      box-sizing: border-box;
+    }
+    #custom-image-modal h3 { color: white; margin-bottom: 20px; }
+    #custom-image-modal p {
+      color: white; margin-bottom: 20px; text-align: center;
+      max-width: 600px;
+    }
+    #custom-image-input { display: none; }
+    #custom-image-label {
+      background-color: #ff1493; color: white; padding: 10px 20px;
+      border-radius: 5px; cursor: pointer; margin-bottom: 20px;
+    }
+    #custom-image-preview {
+      max-width: 80%; max-height: 300px; margin: 20px 0;
+      border-radius: 5px; display: none;
+    }
+    .modal-buttons { display: flex; justify-content: center; gap: 10px; }
+    .modal-button { padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; }
+    #apply-custom-image { background-color: #ff1493; color: white; }
+    #cancel-custom-image, #reset-default-image { background-color: #666; color: white; }
+  </style>
+</head>
+<body>
+  <div id="warning-screen" class="screen">
+    <h2>⚠️ 18禁內容警告 ⚠️</h2>
+    <p>本網站包含成人內容，僅供年滿18歲以上成人瀏覽。<br>
+    若您未滿18歲，請立即離開。<br>
+    點擊「進入網站」代表您已確認年滿18歲，並同意觀看相關內容。</p>
+    <div>
+      <button id="enter-button" class="action-button">進入網站</button>
+      <button id="exit-button" class="action-button">離開</button>
+    </div>
+  </div>
+  
+  <div id="loading-screen" class="screen" style="display:none;">
+    <div>資源載入中...</div>
+    <div class="spinner"></div>
+    <div class="progress-container">
+      <div id="progress-bar"></div>
+    </div>
+    <div id="progress-text">0%</div>
+  </div>
+  
+  <div id="custom-image-modal">
+    <h3>上傳自定義照片</h3>
+    <p>選擇一張照片作為底圖，替換原本的人物圖像。<br>為了最佳效果，請選擇清晰的正面照片。</p>
+    <label id="custom-image-label" for="custom-image-input">選擇照片</label>
+    <input type="file" id="custom-image-input" accept="image/*">
+    <img id="custom-image-preview">
+    <div class="modal-buttons">
+      <button id="apply-custom-image" class="modal-button" disabled>套用照片</button>
+      <button id="reset-default-image" class="modal-button">還原預設圖片</button>
+      <button id="cancel-custom-image" class="modal-button">取消</button>
+    </div>
+  </div>
+  
+  <div id="fixed-controls">
+    <button id="exit-aim-mode">退出射擊模式</button>
+    <button id="enlarge-text">放大文字</button>
+    <button id="shrink-text">縮小文字</button>
+    <button id="delete-text">刪除文字</button>
+  </div>
+  
+  <div class="container">
+    <h1>黃庭筠的極致顏射體驗</h1>
+    <p class="subtitle">她渴望你的洗禮！盡情羞辱她吧！</p>
+    
+    <div id="canvas-container">
+      <canvas id="main-canvas"></canvas>
+      <div id="aim-circle"><div id="aim-center"></div></div>
+    </div>
+    
+    <div class="controls-footer">
+      <div class="input-group">
+        <input type="text" id="custom-text-input" placeholder="輸入自定義文字">
+        <button id="add-text-button" class="button">添加文字</button>
+      </div>
+      <div class="controls-container">
+        <button id="random-text-button" class="button small-button">隨機文字</button>
+        <button id="shoot-button" class="button small-button">射爆她！</button>
+        <button id="clean-button" class="button small-button">清除畫布</button>
+        <button id="custom-mode-button" class="button small-button">自定義</button>
+      </div>
+      <p class="info">玩弄這欠幹婊子！使勁羞辱她！</p>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('main-canvas');
+    const ctx = canvas.getContext('2d');
+    const els = {
+      shoot: document.getElementById('shoot-button'),
+      clean: document.getElementById('clean-button'),
+      addText: document.getElementById('add-text-button'),
+      randomText: document.getElementById('random-text-button'),
+      textInput: document.getElementById('custom-text-input'),
+      canvasContainer: document.getElementById('canvas-container'),
+      aimCircle: document.getElementById('aim-circle'),
+      exitAim: document.getElementById('exit-aim-mode'),
+      enlargeText: document.getElementById('enlarge-text'),
+      shrinkText: document.getElementById('shrink-text'),
+      deleteText: document.getElementById('delete-text'),
+      warningScreen: document.getElementById('warning-screen'),
+      enterBtn: document.getElementById('enter-button'),
+      exitBtn: document.getElementById('exit-button'),
+      loadingScreen: document.getElementById('loading-screen'),
+      progressBar: document.getElementById('progress-bar'),
+      progressText: document.getElementById('progress-text'),
+      customModeBtn: document.getElementById('custom-mode-button'),
+      customImageModal: document.getElementById('custom-image-modal'),
+      customImageInput: document.getElementById('custom-image-input'),
+      customImagePreview: document.getElementById('custom-image-preview'),
+      applyCustomImage: document.getElementById('apply-custom-image'),
+      cancelCustomImage: document.getElementById('cancel-custom-image'),
+      resetDefaultImage: document.getElementById('reset-default-image')
+    };
+    
+    const randomTexts = [
+      "世新大學公廁", "傳播系肉便器", "A103210095賤畜", "黃庭筠賤種", "人盡可夫的婊子",
+      "精液儲存罐", "爛穴母狗", "飢渴的騷逼", "永遠合不攏的逼", "精液過敏體質",
+      "最愛吃屎的賤貨", "專吃爛雞巴", "專業吸精", "最愛被尿在臉上", "每天含精睡覺",
+      "乳頭比眼睛還大", "爛掉的子宮", "鬆垮的陰唇", "爛臭的肛門", "奶頭永遠勃起",
+      "不如街邊的狗", "連廁所都嫌你髒", "垃圾都比你值錢", "生來就該被操死", "賤到骨子裡",
+      "1995/12/13生的廢物", "傳播系最賤學生", "世新大學性奴", "臺灣最賤女人", "黃家的恥辱"
+    ];
+
+    const cumImages = [
+      "images/573575155.png", 
+      "images/937768552.png",
+      "images/2056307458.png", 
+      "images/146852559.png",
+      "images/151294132.png", 
+      "images/374512044.png",
+      "images/375362629.png", 
+      "images/387016456.png",
+      "images/406480507.png", 
+      "images/471795489.png",
+      "images/577989388.png", 
+      "images/579602214.png",
+      "images/1178825790.png"
+    ];
+    
+    const baseImageUrl = "images/1234567.png";
+    let state = {
+      isAiming: false,
+      baseImage: new Image(),
+      currentCumIndex: 0,
+      selectedText: null,
+      preloadedImages: [],
+      customImage: null,
+      isUsingCustomImage: false
+    };
+    
+    // 事件初始化
+    els.enterBtn.addEventListener('click', () => {
+      els.warningScreen.style.display = 'none';
+      els.loadingScreen.style.display = 'flex';
+      preloadAssets();
+    });
+    
+    els.exitBtn.addEventListener('click', () => window.location.href = 'https://www.google.com');
+    
+    // 自定義照片功能
+    els.customModeBtn.addEventListener('click', () => els.customImageModal.style.display = 'flex');
+    
+    els.customImageInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          els.customImagePreview.src = event.target.result;
+          els.customImagePreview.style.display = 'block';
+          els.applyCustomImage.disabled = false;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+    
+    els.applyCustomImage.addEventListener('click', () => {
+      state.customImage = new Image();
+      state.customImage.onload = () => {
+        state.isUsingCustomImage = true;
+        cleanCanvas();
+        els.customImageModal.style.display = 'none';
+      };
+      state.customImage.src = els.customImagePreview.src;
+    });
+    
+    els.resetDefaultImage.addEventListener('click', () => {
+      state.isUsingCustomImage = false;
+      cleanCanvas();
+      els.customImageModal.style.display = 'none';
+      els.customImagePreview.style.display = 'none';
+      els.customImageInput.value = '';
+      els.applyCustomImage.disabled = true;
+    });
+    
+    els.cancelCustomImage.addEventListener('click', () => els.customImageModal.style.display = 'none');
+    
+    function preloadAssets() {
+      const totalAssets = cumImages.length + 1;
+      let loadedAssets = 0;
+      
+      state.baseImage.onload = assetLoaded;
+      state.baseImage.src = baseImageUrl;
+      
+      cumImages.forEach(src => {
+        const img = new Image();
+        img.onload = assetLoaded;
+        img.onerror = assetLoaded;
+        img.src = src;
+        state.preloadedImages.push(img);
+      });
+      
+      function assetLoaded() {
+        loadedAssets++;
+        const progress = Math.floor((loadedAssets / totalAssets) * 100);
+        els.progressBar.style.width = progress + '%';
+        els.progressText.textContent = progress + '%';
+        
+        if (loadedAssets >= totalAssets) {
+          setTimeout(() => {
+            els.loadingScreen.style.display = 'none';
+            initializeApp();
+          }, 500);
+        }
+      }
+    }
+    
+    function initializeApp() {
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+      setupEventListeners();
+      addInitialTexts();
+    }
+    
+    function resizeCanvas() {
+      const sourceImage = state.isUsingCustomImage ? state.customImage : state.baseImage;
+      
+      if (!sourceImage || !sourceImage.complete) return;
+      
+      // 直接使用原始圖片尺寸設置 canvas
+      canvas.width = sourceImage.width;
+      canvas.height = sourceImage.height;
+      
+      // 繪製圖片
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(sourceImage, 0, 0);
+      
+      // 確保 canvas 不會超出容器
+      const maxWidth = els.canvasContainer.clientWidth;
+      const maxHeight = window.innerHeight - 150;
+      
+      // 計算縮放比例 (CSS 會處理實際顯示尺寸)
+      const scaleX = maxWidth / canvas.width;
+      const scaleY = maxHeight / canvas.height;
+      const scale = Math.min(scaleX, scaleY);
+      
+      // 更新 canvas 的 CSS 尺寸 (如果需要)
+      if (scale < 1) {
+        canvas.style.width = Math.floor(canvas.width * scale) + 'px';
+        canvas.style.height = Math.floor(canvas.height * scale) + 'px';
+      } else {
+        canvas.style.width = '';
+        canvas.style.height = '';
+      }
+    }
+    
+    function setupEventListeners() {
+      els.shoot.addEventListener('click', startAimMode);
+      els.exitAim.addEventListener('click', exitAimMode);
+      els.canvasContainer.addEventListener('mousemove', handleAim);
+      els.canvasContainer.addEventListener('touchmove', handleAim);
+      canvas.addEventListener('click', handleShoot);
+      canvas.addEventListener('touchend', handleShoot);
+      els.clean.addEventListener('click', cleanCanvas);
+      els.addText.addEventListener('click', addCustomText);
+      els.randomText.addEventListener('click', addRandomText);
+      els.textInput.addEventListener('keyup', e => e.key === 'Enter' && addCustomText());
+      
+      els.enlargeText.addEventListener('click', enlargeSelectedText);
+      els.shrinkText.addEventListener('click', shrinkSelectedText);
+      els.deleteText.addEventListener('click', deleteSelectedText);
+      
+      document.addEventListener('click', hideTextControlsOnOutsideClick);
+    }
+    
+    function getMousePos(evt) {
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      const clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
+      const clientY = evt.touches ? evt.touches[0].clientY : evt.clientY;
+      
+      return {
+        x: (clientX - rect.left) * scaleX,
+        y: (clientY - rect.top) * scaleY
+      };
+    }
+
+    function addInitialTexts() {
+      addTextToImage("賤貨", 20, 20);
+      addTextToImage("母狗", 70, 30);
+    }
+    
+    function addCustomText() {
+      const text = els.textInput.value.trim();
+      if (text) {
+        addTextToImage(text);
+        els.textInput.value = '';
+      }
+    }
+    
+    function addRandomText() {
+      const randomText = randomTexts[Math.floor(Math.random() * randomTexts.length)];
+      addTextToImage(randomText);
+    }
+
+    function addTextToImage(text, left = null, top = null) {
+      const textElement = document.createElement('span');
+      textElement.classList.add('target-text');
+      textElement.textContent = text;
+      textElement.style.left = left ? `${left}%` : `${Math.random() * 80}%`;
+      textElement.style.top = top ? `${top}%` : `${Math.random() * 80}%`;
+      els.canvasContainer.appendChild(textElement);
+      
+      let isDragging = false, startX, startY;
+      
+      textElement.addEventListener('mousedown', startDrag);
+      textElement.addEventListener('touchstart', startDrag);
+      document.addEventListener('mousemove', drag);
+      document.addEventListener('touchmove', drag);
+      document.addEventListener('mouseup', stopDrag);
+      document.addEventListener('touchend', stopDrag);
+      textElement.addEventListener('click', e => {
+        e.stopPropagation();
+        state.selectedText = textElement;
+        showTextControls();
+      });
+      
+      function startDrag(e) {
+        isDragging = true;
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        startX = clientX - textElement.offsetLeft;
+        startY = clientY - textElement.offsetTop;
+        e.preventDefault();
+      }
+      
+      function drag(e) {
+        if (!isDragging) return;
+        e.preventDefault();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        
+        if (clientX && clientY) {
+          textElement.style.left = `${clientX - startX}px`;
+          textElement.style.top = `${clientY - startY}px`;
+        }
+      }
+      
+      function stopDrag() {
+        isDragging = false;
+      }
+    }
+    
+    function showTextControls() {
+      if (state.isAiming) return;
+      els.enlargeText.style.display = 'block';
+      els.shrinkText.style.display = 'block';
+      els.deleteText.style.display = 'block';
+    }
+    
+    function hideTextControls() {
+      state.selectedText = null;
+      els.enlargeText.style.display = 'none';
+      els.shrinkText.style.display = 'none';
+      els.deleteText.style.display = 'none';
+    }
+    
+    function hideTextControlsOnOutsideClick(e) {
+      if (!e.target.classList.contains('target-text') && 
+          !e.target.id.includes('text') && 
+          e.target.id !== 'enlarge-text' && 
+          e.target.id !== 'shrink-text' && 
+          e.target.id !== 'delete-text') {
+        hideTextControls();
+      }
+    }
+    
+    function enlargeSelectedText() {
+      if (state.selectedText) {
+        const currentSize = window.getComputedStyle(state.selectedText).fontSize;
+        state.selectedText.style.fontSize = `${parseFloat(currentSize) + 2}px`;
+      }
+    }
+    
+    function shrinkSelectedText() {
+      if (state.selectedText) {
+        const currentSize = window.getComputedStyle(state.selectedText).fontSize;
+        state.selectedText.style.fontSize = `${Math.max(parseFloat(currentSize) - 2, 10)}px`;
+      }
+    }
+    
+    function deleteSelectedText() {
+      if (state.selectedText) {
+        state.selectedText.remove();
+        state.selectedText = null;
+        hideTextControls();
+      }
+    }
+    
+    function startAimMode() {
+      state.isAiming = true;
+      els.aimCircle.style.display = 'block';
+      els.exitAim.style.display = 'block';
+      hideTextControls();
+    }
+    
+    function exitAimMode() {
+      state.isAiming = false;
+      els.aimCircle.style.display = 'none';
+      els.exitAim.style.display = 'none';
+    }
+    
+    function handleAim(e) {
+      if (!state.isAiming) return;
+      
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      
+      els.aimCircle.style.left = `${clientX}px`;
+      els.aimCircle.style.top = `${clientY}px`;
+    }
+    
+    function handleShoot(e) {
+      if (!state.isAiming) return;
+      
+      const pos = getMousePos(e);
+      const cumImg = new Image();
+      cumImg.onload = () => {
+        // 繪製精液圖片到 canvas 上
+        ctx.drawImage(cumImg, pos.x - cumImg.width / 2, pos.y - cumImg.height / 2);
+      };
+      cumImg.src = cumImages[state.currentCumIndex];
+      
+      // 循環使用精液圖片
+      state.currentCumIndex = (state.currentCumIndex + 1) % cumImages.length;
+    }
+    
+    function cleanCanvas() {
+      // 清除 canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // 重新繪製基本圖片
+      const sourceImage = state.isUsingCustomImage ? state.customImage : state.baseImage;
+      if (sourceImage && sourceImage.complete) {
+        ctx.drawImage(sourceImage, 0, 0);
+      }
+      
+      // 退出瞄準模式
+      exitAimMode();
+    }
+  </script>
+</body>
+</html>
