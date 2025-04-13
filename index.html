@@ -3,16 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="黃庭筠的個人互動體驗網站，提供獨特的視覺互動效果和自定義功能。">
-  <meta name="keywords" content="黃庭筠,互動體驗,視覺效果,自定義功能,個人網站">
+  <meta name="description" content="黃庭筠的顏射互動網站 - 在線射精體驗">
+  <meta name="keywords" content="黃庭筠,顏射,射精,互動體驗,成人內容">
   <meta name="author" content="黃庭筠">
   <meta name="robots" content="index, follow">
-  <meta property="og:title" content="黃庭筠的互動體驗">
-  <meta property="og:description" content="黃庭筠的個人互動體驗網站，提供獨特的視覺互動效果和自定義功能。">
+  <meta property="og:title" content="黃庭筠的顏射體驗">
+  <meta property="og:description" content="黃庭筠的顏射互動網站 - 在線射精體驗">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://huangtt607.github.io/TINGYUNCUM/">
   <meta property="og:image" content="images/1234567.png">
-  <title>黃庭筠的互動體驗</title>
+  <title>黃庭筠的顏射體驗</title>
+  <link rel="icon" type="image/png" href="images/favicon.png">
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-9FVCBCYPZF"></script>
   <script>
@@ -67,8 +68,7 @@
     #aim-circle {
       position: absolute; border: 2px solid red; border-radius: 50%;
       width: 40px; height: 40px; pointer-events: none;
-      display: none; transform: translate(-50%, -50%);
-      z-index: 20;
+      display: none; z-index: 20;
     }
     #aim-center {
       position: absolute; background-color: red; width: 4px; height: 4px;
@@ -82,13 +82,17 @@
     }
     .small-button { width: calc(25% - 4px); margin: 0 2px 4px 0; }
     #fixed-controls {
-      position: fixed; top: 5px; right: 5px; z-index: 1000;
+      position: fixed; top: 10px; left: 10px; z-index: 1000;
       display: flex; flex-direction: column;
     }
     #fixed-controls button {
       background-color: #ff1493; color: white; border: none;
       padding: 6px 8px; border-radius: 5px; cursor: pointer;
-      margin-bottom: 3px; font-size: 12px; display: none;
+      margin-bottom: 5px; font-size: 12px; display: none;
+      opacity: 0.8;
+    }
+    #fixed-controls button:hover {
+      opacity: 1;
     }
     .controls-footer { width: 100%; margin-top: auto; }
     .info { 
@@ -391,7 +395,16 @@
       
       // 繪製圖片
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(sourceImage, 0, 0);
+      
+      // 如果是自定義圖片，確保居中顯示
+      if (state.isUsingCustomImage) {
+        // 計算居中位置
+        const x = (canvas.width - sourceImage.width) / 2;
+        const y = (canvas.height - sourceImage.height) / 2;
+        ctx.drawImage(sourceImage, x, y, sourceImage.width, sourceImage.height);
+      } else {
+        ctx.drawImage(sourceImage, 0, 0);
+      }
       
       // 確保 canvas 不會超出容器
       const maxWidth = els.canvasContainer.clientWidth;
@@ -481,7 +494,7 @@
       textElement.addEventListener('click', e => {
         e.stopPropagation();
         state.selectedText = textElement;
-        showTextControls();
+        showTextControls(textElement);
       });
       
       function startDrag(e) {
@@ -510,8 +523,13 @@
       }
     }
     
-    function showTextControls() {
+    function showTextControls(textElement) {
       if (state.isAiming) return;
+      
+      // 獲取文字元素的位置
+      const rect = textElement.getBoundingClientRect();
+      
+      // 設置控制按鈕的位置
       els.enlargeText.style.display = 'block';
       els.shrinkText.style.display = 'block';
       els.deleteText.style.display = 'block';
@@ -575,8 +593,16 @@
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
       const clientY = e.touches ? e.touches[0].clientY : e.clientY;
       
-      els.aimCircle.style.left = `${clientX}px`;
-      els.aimCircle.style.top = `${clientY}px`;
+      // 獲取canvas容器的位置
+      const rect = canvas.getBoundingClientRect();
+      
+      // 計算相對於canvas的位置
+      const x = clientX - rect.left;
+      const y = clientY - rect.top;
+      
+      // 設置準心位置，不使用transform以避免偏移問題
+      els.aimCircle.style.left = `${x - 20}px`;  // 20是準心寬度的一半
+      els.aimCircle.style.top = `${y - 20}px`;   // 20是準心高度的一半
     }
     
     function handleShoot(e) {
@@ -601,7 +627,14 @@
       // 重新繪製基本圖片
       const sourceImage = state.isUsingCustomImage ? state.customImage : state.baseImage;
       if (sourceImage && sourceImage.complete) {
-        ctx.drawImage(sourceImage, 0, 0);
+        if (state.isUsingCustomImage) {
+          // 計算居中位置
+          const x = (canvas.width - sourceImage.width) / 2;
+          const y = (canvas.height - sourceImage.height) / 2;
+          ctx.drawImage(sourceImage, x, y, sourceImage.width, sourceImage.height);
+        } else {
+          ctx.drawImage(sourceImage, 0, 0);
+        }
       }
       
       // 退出瞄準模式
