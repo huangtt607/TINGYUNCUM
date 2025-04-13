@@ -31,33 +31,39 @@
       overflow-x: hidden; display: flex; flex-direction: column;
     }
     .container {
-      max-width: 100%; padding: 5px; box-sizing: border-box;
+      max-width: 1200px; /* 增加最大寬度 */
+      width: 95%; /* 使用百分比寬度以適應不同設備 */
+      padding: 10px; box-sizing: border-box;
       text-align: center; margin: 0 auto;
       display: flex; flex-direction: column; height: 100%;
     }
     h1 { 
-      font-size: 24px; 
-      margin: 5px 0; 
+      font-size: 28px; 
+      margin: 10px 0; 
       line-height: 1.2; 
       z-index: 2; 
       position: relative; 
     }
     .subtitle { 
-      font-size: 16px; 
-      margin: 3px 0 10px 0; 
+      font-size: 18px; 
+      margin: 5px 0 15px 0; 
       line-height: 1.2; 
       z-index: 2; 
       position: relative; 
     }
     #canvas-container {
-      position: relative; width: 100%; 
-      margin: 0 auto 8px auto; flex: 1;
-      display: flex; align-items: center; justify-content: center;
+      position: relative; 
+      width: 100%; 
+      margin: 0 auto 15px auto; 
+      flex: 1;
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
       overflow: hidden;
     }
     #main-canvas {
       max-width: 100%;
-      max-height: 75vh;
+      max-height: 80vh; /* 增加最大高度 */
       height: auto;
       display: block; 
       border-radius: 10px;
@@ -65,7 +71,7 @@
     }
     .target-text {
       position: absolute; color: #ff1493; font-weight: bold;
-      font-size: 16px; text-shadow: 1px 1px 2px black;
+      font-size: 18px; text-shadow: 1px 1px 2px black;
       cursor: move; user-select: none; z-index: 10;
     }
     #aim-circle {
@@ -79,36 +85,45 @@
       transform: translate(-50%, -50%);
     }
     .button {
-      display: inline-block; padding: 8px 0; background-color: #ff1493;
+      display: inline-block; padding: 10px 0; background-color: #ff1493;
       color: white; text-align: center; text-decoration: none;
-      font-size: 14px; border-radius: 5px; border: none; cursor: pointer;
+      font-size: 16px; border-radius: 5px; border: none; cursor: pointer;
     }
-    .small-button { width: calc(25% - 4px); margin: 0 2px 4px 0; }
+    .small-button { 
+      width: calc(25% - 8px); 
+      margin: 0 4px 8px 0; 
+    }
     #fixed-controls {
       position: fixed; top: 10px; left: 10px; z-index: 1000;
       display: flex; flex-direction: column;
     }
     #fixed-controls button {
       background-color: #ff1493; color: white; border: none;
-      padding: 6px 8px; border-radius: 5px; cursor: pointer;
-      margin-bottom: 5px; font-size: 12px; display: none;
+      padding: 8px 10px; border-radius: 5px; cursor: pointer;
+      margin-bottom: 5px; font-size: 14px; display: none;
       opacity: 0.8;
     }
     #fixed-controls button:hover {
       opacity: 1;
     }
-    .controls-footer { width: 100%; margin-top: auto; }
-    .info { 
-      font-size: 14px; line-height: 1.2; margin: 3px 0;
-      padding: 0 5px; color: rgba(255, 255, 255, 0.8);
+    .controls-footer { 
+      width: 100%; 
+      margin-top: auto; 
+      max-width: 800px; /* 控制區域最大寬度 */
+      margin-left: auto;
+      margin-right: auto;
     }
-    .input-group { display: flex; margin-bottom: 4px; }
+    .info { 
+      font-size: 16px; line-height: 1.3; margin: 5px 0;
+      padding: 0 5px; color: rgba(255, 255, 255, 0.9);
+    }
+    .input-group { display: flex; margin-bottom: 8px; }
     #custom-text-input {
-      flex: 1; padding: 8px; border: none; border-radius: 5px 0 0 5px;
-      box-sizing: border-box; font-size: 14px; height: 32px;
+      flex: 1; padding: 10px; border: none; border-radius: 5px 0 0 5px;
+      box-sizing: border-box; font-size: 16px; height: 40px;
     }
     #add-text-button {
-      width: 80px; border-radius: 0 5px 5px 0; margin: 0;
+      width: 100px; border-radius: 0 5px 5px 0; margin: 0;
     }
     .controls-container {
       display: flex; flex-wrap: wrap; justify-content: space-between;
@@ -120,11 +135,11 @@
       z-index: 9999;
     }
     #warning-screen { z-index: 10000; padding: 20px; box-sizing: border-box; text-align: center; }
-    #warning-screen h2 { color: red; font-size: 28px; margin-bottom: 20px; }
-    #warning-screen p { color: white; font-size: 16px; margin-bottom: 30px; max-width: 600px; }
+    #warning-screen h2 { color: red; font-size: 32px; margin-bottom: 20px; }
+    #warning-screen p { color: white; font-size: 18px; margin-bottom: 30px; max-width: 800px; }
     .action-button {
-      padding: 12px 30px; background-color: #ff1493; color: white;
-      border: none; border-radius: 5px; font-size: 18px;
+      padding: 15px 40px; background-color: #ff1493; color: white;
+      border: none; border-radius: 5px; font-size: 20px;
       cursor: pointer; margin: 10px;
     }
     #exit-button { background-color: #666; }
@@ -138,14 +153,14 @@
       100% { transform: rotate(360deg); }
     }
     .progress-container {
-      width: 80%; max-width: 300px; background-color: #444;
+      width: 80%; max-width: 400px; background-color: #444;
       border-radius: 10px; margin-top: 20px;
     }
     #progress-bar {
       height: 20px; background-color: #ff1493; border-radius: 10px;
       width: 0%; transition: width 0.3s;
     }
-    #progress-text { color: white; margin-top: 5px; font-size: 14px; }
+    #progress-text { color: white; margin-top: 5px; font-size: 16px; }
     #custom-image-modal {
       display: none; position: fixed; top: 0; left: 0;
       width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.9);
@@ -160,49 +175,61 @@
       justify-content: center; align-items: center; padding: 20px;
       box-sizing: border-box; overflow-y: auto;
     }
-    #help-modal h3 { color: white; margin-bottom: 10px; }
+    #help-modal h3 { 
+      color: white; 
+      margin-bottom: 15px; 
+      font-size: 24px;
+    }
     #help-modal p {
       color: white; margin-bottom: 15px; text-align: left;
-      max-width: 600px; line-height: 1.5;
+      max-width: 800px; line-height: 1.6;
+      font-size: 16px;
     }
     #help-modal img {
       max-width: 90%;
-      max-height: 300px;
-      margin: 10px 0;
+      max-height: 400px;
+      margin: 15px 0;
       border-radius: 5px;
     }
-    #custom-image-modal h3 { color: white; margin-bottom: 20px; }
+    #custom-image-modal h3 { color: white; margin-bottom: 20px; font-size: 24px; }
     #custom-image-modal p {
       color: white; margin-bottom: 20px; text-align: center;
-      max-width: 600px;
+      max-width: 800px; font-size: 16px; line-height: 1.5;
     }
     #custom-image-input { display: none; }
     #custom-image-label {
-      background-color: #ff1493; color: white; padding: 10px 20px;
+      background-color: #ff1493; color: white; padding: 12px 25px;
       border-radius: 5px; cursor: pointer; margin-bottom: 20px;
+      font-size: 16px;
     }
     #custom-image-preview {
-      max-width: 80%; max-height: 300px; margin: 20px 0;
+      max-width: 80%; max-height: 400px; margin: 20px 0;
       border-radius: 5px; display: none;
     }
-    .modal-buttons { display: flex; justify-content: center; gap: 10px; }
-    .modal-button { padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; }
+    .modal-buttons { display: flex; justify-content: center; gap: 15px; }
+    .modal-button { 
+      padding: 10px 20px; 
+      border: none; 
+      border-radius: 5px; 
+      cursor: pointer; 
+      font-size: 16px;
+    }
     #apply-custom-image { background-color: #ff1493; color: white; }
     #cancel-custom-image, #reset-default-image, #close-help { background-color: #666; color: white; }
     #profile-switcher {
       position: absolute;
-      bottom: 10px;
-      right: 10px;
+      bottom: 15px;
+      right: 15px;
       z-index: 100;
       background-color: rgba(255, 105, 180, 0.7);
       border-radius: 50%;
-      width: 30px;
-      height: 30px;
+      width: 40px;
+      height: 40px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 16px;
+      font-size: 20px;
       color: white;
       border: 2px solid white;
       box-shadow: 0 2px 5px rgba(0,0,0,0.3);
@@ -212,18 +239,18 @@
     }
     #help-button {
       position: fixed;
-      top: 10px;
-      right: 10px;
+      top: 15px;
+      right: 15px;
       z-index: 100;
       background-color: rgba(255, 105, 180, 0.7);
       border-radius: 50%;
-      width: 30px;
-      height: 30px;
+      width: 40px;
+      height: 40px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 18px;
+      font-size: 22px;
       font-weight: bold;
       color: white;
       border: 2px solid white;
@@ -239,9 +266,9 @@
       transform: translate(-50%, -50%);
       background-color: rgba(0, 0, 0, 0.7);
       color: white;
-      padding: 10px 15px;
+      padding: 12px 20px;
       border-radius: 5px;
-      font-size: 14px;
+      font-size: 16px;
       z-index: 1000;
       display: none;
       text-align: center;
@@ -250,24 +277,47 @@
     
     /* 媒體查詢，針對移動設備 */
     @media (max-width: 768px) {
+      .container {
+        width: 100%; /* 在手機上使用全寬 */
+        padding: 5px;
+      }
+      h1 {
+        font-size: 22px;
+      }
+      .subtitle {
+        font-size: 16px;
+      }
       #fixed-controls {
         top: 10px;
         left: 10px;
         flex-direction: row;
         flex-wrap: wrap;
-        max-width: 120px;
+        max-width: 150px;
         justify-content: flex-start;
       }
       #fixed-controls button {
         margin-right: 5px;
-        font-size: 11px;
-        padding: 5px 7px;
+        font-size: 12px;
+        padding: 6px 8px;
       }
       .small-button { 
-        width: calc(25% - 4px); 
+        width: calc(50% - 4px); /* 在手機上每行顯示兩個按鈕 */
+        font-size: 14px;
+        padding: 8px 0;
       }
       #main-canvas {
-        max-height: 65vh;
+        max-height: 70vh;
+      }
+      .target-text {
+        font-size: 16px;
+      }
+      #custom-text-input {
+        height: 36px;
+        font-size: 14px;
+      }
+      #add-text-button {
+        width: 80px;
+        font-size: 14px;
       }
     }
   </style>
@@ -309,7 +359,7 @@
   <div id="help-modal">
     <h3>網站使用說明</h3>
     <p><strong>黃庭筠是誰？</strong><br>
-    黃庭筠，世新大學傳播管理學系學生，學號A103210095，生於1995年12月13日。以下是她的學生證照片：</p>
+    黃庭筠，台灣世新大學傳播管理學系學生，學號A103210095，生於1995年12月13日。她不僅身材前凸後翹，而且是個不折不扣的反差騷貨，在上學期間就荣獲萬人騎的稱號，對於所有炮友的要求都有求必應。時間一長，她也練就出了精湛的口技，趴在炮友身上賣力地吞吐肉棒，溫暖濕滑的嘴穴緊緊包裹肉棒，淫蕩的表情很是到位，時不時還發出陣陣極度下賤的呻吟。以下是她的學生證照片：</p>
     <img src="images/help/student_id.jpg" alt="黃庭筠學生證">
     <p><strong>網站功能說明：</strong></p>
     <p>1. <strong>添加文字</strong>：在輸入框中輸入文字，點擊「添加文字」按鈕將文字添加到圖片上。您也可以點擊「隨機文字」按鈕添加預設的羞辱文字。</p>
@@ -438,7 +488,8 @@
       isUsingCustomImage: false,
       currentProfileIndex: 0,
       isMobile: false,
-      textElements: []
+      textElements: [],
+      initialTextsAdded: false // 新增標記，用於追蹤初始文字是否已添加
     };
     
     // 檢測是否為移動設備
@@ -573,7 +624,12 @@
         resizeCanvas();
       });
       setupEventListeners();
-      addInitialTexts();
+      
+      // 只在首次初始化時添加初始文字
+      if (!state.initialTextsAdded) {
+        addInitialTexts();
+        state.initialTextsAdded = true;
+      }
     }
     
     function resizeCanvas() {
@@ -837,8 +893,8 @@
       // 獲取當前精液圖片
       const cumImg = state.preloadedImages[state.currentCumIndex];
       
-      // 精液飛濺效果尺寸 - 隨機大小
-      const size = Math.random() * 80 + 120;
+      // 精液飛濺效果尺寸 - 縮小尺寸
+      const size = Math.random() * 50 + 70; // 從 80+120 改為 50+70
       
       // 使用source-atop確保只在非透明區域顯示精液
       ctx.globalCompositeOperation = 'source-atop';
