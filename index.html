@@ -36,16 +36,16 @@
       display: flex; flex-direction: column; height: 100%;
     }
     h1 { 
-      font-size: 20px; 
-      margin: 3px 0; 
-      line-height: 1.1; 
+      font-size: 24px; 
+      margin: 5px 0; 
+      line-height: 1.2; 
       z-index: 2; 
       position: relative; 
     }
     .subtitle { 
-      font-size: 14px; 
+      font-size: 16px; 
       margin: 3px 0 10px 0; 
-      line-height: 1.1; 
+      line-height: 1.2; 
       z-index: 2; 
       position: relative; 
     }
@@ -57,7 +57,7 @@
     }
     #main-canvas {
       max-width: 100%;
-      max-height: 70vh;
+      max-height: 75vh;
       height: auto;
       display: block; 
       border-radius: 10px;
@@ -65,7 +65,7 @@
     }
     .target-text {
       position: absolute; color: #ff1493; font-weight: bold;
-      font-size: 14px; text-shadow: 1px 1px 2px black;
+      font-size: 16px; text-shadow: 1px 1px 2px black;
       cursor: move; user-select: none; z-index: 10;
     }
     #aim-circle {
@@ -79,13 +79,13 @@
       transform: translate(-50%, -50%);
     }
     .button {
-      display: inline-block; padding: 6px 0; background-color: #ff1493;
+      display: inline-block; padding: 8px 0; background-color: #ff1493;
       color: white; text-align: center; text-decoration: none;
-      font-size: 12px; border-radius: 5px; border: none; cursor: pointer;
+      font-size: 14px; border-radius: 5px; border: none; cursor: pointer;
     }
     .small-button { width: calc(25% - 4px); margin: 0 2px 4px 0; }
     #fixed-controls {
-      position: fixed; bottom: 10px; right: 10px; z-index: 1000;
+      position: fixed; top: 10px; left: 10px; z-index: 1000;
       display: flex; flex-direction: column;
     }
     #fixed-controls button {
@@ -99,13 +99,13 @@
     }
     .controls-footer { width: 100%; margin-top: auto; }
     .info { 
-      font-size: 12px; line-height: 1.2; margin: 3px 0;
+      font-size: 14px; line-height: 1.2; margin: 3px 0;
       padding: 0 5px; color: rgba(255, 255, 255, 0.8);
     }
     .input-group { display: flex; margin-bottom: 4px; }
     #custom-text-input {
-      flex: 1; padding: 6px; border: none; border-radius: 5px 0 0 5px;
-      box-sizing: border-box; font-size: 12px; height: 28px;
+      flex: 1; padding: 8px; border: none; border-radius: 5px 0 0 5px;
+      box-sizing: border-box; font-size: 14px; height: 32px;
     }
     #add-text-button {
       width: 80px; border-radius: 0 5px 5px 0; margin: 0;
@@ -153,6 +153,24 @@
       justify-content: center; align-items: center; padding: 20px;
       box-sizing: border-box;
     }
+    #help-modal {
+      display: none; position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.9);
+      z-index: 10001; flex-direction: column;
+      justify-content: center; align-items: center; padding: 20px;
+      box-sizing: border-box; overflow-y: auto;
+    }
+    #help-modal h3 { color: white; margin-bottom: 10px; }
+    #help-modal p {
+      color: white; margin-bottom: 15px; text-align: left;
+      max-width: 600px; line-height: 1.5;
+    }
+    #help-modal img {
+      max-width: 90%;
+      max-height: 300px;
+      margin: 10px 0;
+      border-radius: 5px;
+    }
     #custom-image-modal h3 { color: white; margin-bottom: 20px; }
     #custom-image-modal p {
       color: white; margin-bottom: 20px; text-align: center;
@@ -170,7 +188,7 @@
     .modal-buttons { display: flex; justify-content: center; gap: 10px; }
     .modal-button { padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; }
     #apply-custom-image { background-color: #ff1493; color: white; }
-    #cancel-custom-image, #reset-default-image { background-color: #666; color: white; }
+    #cancel-custom-image, #reset-default-image, #close-help { background-color: #666; color: white; }
     #profile-switcher {
       position: absolute;
       bottom: 10px;
@@ -192,6 +210,28 @@
     #profile-switcher:hover {
       background-color: rgba(255, 20, 147, 0.9);
     }
+    #help-button {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 100;
+      background-color: rgba(255, 105, 180, 0.7);
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: bold;
+      color: white;
+      border: 2px solid white;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+    #help-button:hover {
+      background-color: rgba(255, 20, 147, 0.9);
+    }
     #shooting-tip {
       position: fixed;
       top: 50%;
@@ -211,12 +251,12 @@
     /* 媒體查詢，針對移動設備 */
     @media (max-width: 768px) {
       #fixed-controls {
-        bottom: 70px;
-        right: 10px;
+        top: 10px;
+        left: 10px;
         flex-direction: row;
         flex-wrap: wrap;
         max-width: 120px;
-        justify-content: flex-end;
+        justify-content: flex-start;
       }
       #fixed-controls button {
         margin-right: 5px;
@@ -227,7 +267,7 @@
         width: calc(25% - 4px); 
       }
       #main-canvas {
-        max-height: 60vh;
+        max-height: 65vh;
       }
     }
   </style>
@@ -266,14 +306,32 @@
     </div>
   </div>
   
+  <div id="help-modal">
+    <h3>網站使用說明</h3>
+    <p><strong>黃庭筠是誰？</strong><br>
+    黃庭筠，世新大學傳播管理學系學生，學號A103210095，生於1995年12月13日。以下是她的學生證照片：</p>
+    <img src="images/help/student_id.jpg" alt="黃庭筠學生證">
+    <p><strong>網站功能說明：</strong></p>
+    <p>1. <strong>添加文字</strong>：在輸入框中輸入文字，點擊「添加文字」按鈕將文字添加到圖片上。您也可以點擊「隨機文字」按鈕添加預設的羞辱文字。</p>
+    <p>2. <strong>移動文字</strong>：點擊並拖動文字可以調整其位置。點擊文字後，左上角會出現放大、縮小和刪除按鈕。</p>
+    <p>3. <strong>射精功能</strong>：點擊「射爆她！」按鈕進入射精模式，然後點擊圖片任意位置進行射精。</p>
+    <p>4. <strong>切換照片</strong>：點擊右下角的循環按鈕可以切換不同的預設照片。</p>
+    <p>5. <strong>自定義照片</strong>：點擊「自定義」按鈕可以上傳您自己的照片作為底圖。</p>
+    <p>6. <strong>清除畫布</strong>：點擊「清除畫布」按鈕可以清除所有射精痕跡和文字，恢復原始圖片。</p>
+    <div class="modal-buttons">
+      <button id="close-help" class="modal-button">關閉</button>
+    </div>
+  </div>
+  
   <div id="fixed-controls">
-    <button id="exit-aim-mode">退出射擊模式</button>
+    <button id="exit-aim-mode">退出射精模式</button>
     <button id="enlarge-text">放大文字</button>
     <button id="shrink-text">縮小文字</button>
     <button id="delete-text">刪除文字</button>
   </div>
   
-  <div id="shooting-tip">點擊圖片任意位置進行射擊</div>
+  <div id="shooting-tip">點擊圖片任意位置進行射精</div>
+  <div id="help-button" title="使用說明">?</div>
   
   <div class="container">
     <h1>黃庭筠的極致顏射體驗</h1>
@@ -329,7 +387,10 @@
       cancelCustomImage: document.getElementById('cancel-custom-image'),
       resetDefaultImage: document.getElementById('reset-default-image'),
       profileSwitcher: document.getElementById('profile-switcher'),
-      shootingTip: document.getElementById('shooting-tip')
+      shootingTip: document.getElementById('shooting-tip'),
+      helpButton: document.getElementById('help-button'),
+      helpModal: document.getElementById('help-modal'),
+      closeHelp: document.getElementById('close-help')
     };
     
     const randomTexts = [
@@ -376,7 +437,8 @@
       customImage: null,
       isUsingCustomImage: false,
       currentProfileIndex: 0,
-      isMobile: false
+      isMobile: false,
+      textElements: []
     };
     
     // 檢測是否為移動設備
@@ -395,6 +457,10 @@
     });
     
     els.exitBtn.addEventListener('click', () => window.location.href = 'https://www.google.com');
+    
+    // 幫助按鈕功能
+    els.helpButton.addEventListener('click', () => els.helpModal.style.display = 'flex');
+    els.closeHelp.addEventListener('click', () => els.helpModal.style.display = 'none');
     
     // 自定義照片功能
     els.customModeBtn.addEventListener('click', () => els.customImageModal.style.display = 'flex');
@@ -443,7 +509,15 @@
       
       state.currentProfileIndex = (state.currentProfileIndex + 1) % profileImages.length;
       state.baseImage.src = profileImages[state.currentProfileIndex];
-      cleanCanvas();
+      
+      // 保存當前文字元素
+      const savedTextElements = [...state.textElements];
+      
+      // 清除畫布但不清除文字
+      cleanCanvasOnly();
+      
+      // 恢復文字元素
+      state.textElements = savedTextElements;
     }
     
     function preloadAssets() {
@@ -509,7 +583,7 @@
       
       // 獲取容器尺寸
       const containerWidth = els.canvasContainer.clientWidth;
-      const containerHeight = window.innerHeight * (state.isMobile ? 0.6 : 0.7);
+      const containerHeight = window.innerHeight * (state.isMobile ? 0.65 : 0.75);
       
       // 計算圖片的原始寬高比
       const imageRatio = sourceImage.width / sourceImage.height;
@@ -610,6 +684,9 @@
       textElement.style.top = top ? `${top}%` : `${Math.random() * 80}%`;
       els.canvasContainer.appendChild(textElement);
       
+      // 將文字元素添加到追蹤數組
+      state.textElements.push(textElement);
+      
       let isDragging = false, startX, startY;
       
       textElement.addEventListener('mousedown', startDrag);
@@ -692,6 +769,12 @@
     
     function deleteSelectedText() {
       if (state.selectedText) {
+        // 從追蹤數組中移除
+        const index = state.textElements.indexOf(state.selectedText);
+        if (index > -1) {
+          state.textElements.splice(index, 1);
+        }
+        
         state.selectedText.remove();
         state.selectedText = null;
         hideTextControls();
@@ -704,11 +787,13 @@
       // 在移動設備上不顯示準心，而是顯示提示
       if (state.isMobile) {
         els.shootingTip.style.display = 'block';
+        els.shootingTip.textContent = '點擊圖片任意位置進行射精';
         setTimeout(() => {
           els.shootingTip.style.display = 'none';
         }, 2000);
       } else {
         els.aimCircle.style.display = 'block';
+        els.canvasContainer.style.cursor = 'none';
       }
       
       els.exitAim.style.display = 'block';
@@ -720,6 +805,7 @@
       els.aimCircle.style.display = 'none';
       els.shootingTip.style.display = 'none';
       els.exitAim.style.display = 'none';
+      els.canvasContainer.style.cursor = 'default';
     }
     
     function handleAim(e) {
@@ -744,23 +830,54 @@
       if (!state.isAiming) return;
       
       const pos = getMousePos(e);
-      const cumImg = new Image();
-      cumImg.onload = () => {
-        // 繪製精液圖片到 canvas 上
-        ctx.drawImage(cumImg, pos.x - cumImg.width / 2, pos.y - cumImg.height / 2);
-      };
-      cumImg.src = cumImages[state.currentCumIndex];
-      
-      // 循環使用精液圖片
-      state.currentCumIndex = (state.currentCumIndex + 1) % cumImages.length;
+      createSplash(pos.x, pos.y);
     }
     
-    function cleanCanvas() {
+    function createSplash(x, y) {
+      // 獲取當前精液圖片
+      const cumImg = state.preloadedImages[state.currentCumIndex];
+      
+      // 精液飛濺效果尺寸 - 隨機大小
+      const size = Math.random() * 80 + 120;
+      
+      // 使用source-atop確保只在非透明區域顯示精液
+      ctx.globalCompositeOperation = 'source-atop';
+      ctx.drawImage(cumImg, x - size / 2, y - size / 2, size, size);
+      ctx.globalCompositeOperation = 'source-over';
+      
+      // 循環使用精液圖片
+      state.currentCumIndex = (state.currentCumIndex + 1) % state.preloadedImages.length;
+    }
+    
+    // 只清除畫布，不清除文字
+    function cleanCanvasOnly() {
       // 重新調整並繪製canvas
       resizeCanvas();
       
       // 退出瞄準模式
       exitAimMode();
+    }
+    
+    // 清除畫布和所有文字
+    function cleanCanvas() {
+      // 清除所有文字元素
+      state.textElements.forEach(element => {
+        if (element && element.parentNode) {
+          element.remove();
+        }
+      });
+      
+      // 清空文字元素數組
+      state.textElements = [];
+      
+      // 重新調整並繪製canvas
+      resizeCanvas();
+      
+      // 退出瞄準模式
+      exitAimMode();
+      
+      // 隱藏文字控制按鈕
+      hideTextControls();
     }
   </script>
 </body>
