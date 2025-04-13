@@ -94,14 +94,19 @@
       margin: 0 4px 8px 0; 
     }
     #fixed-controls {
-      position: fixed; top: 10px; left: 10px; z-index: 1000;
-      display: flex; flex-direction: column;
+      position: fixed; 
+      top: 10px; 
+      left: 10px; 
+      z-index: 1000;
+      display: flex; 
+      flex-direction: column;
     }
     #fixed-controls button {
       background-color: #ff1493; color: white; border: none;
       padding: 8px 10px; border-radius: 5px; cursor: pointer;
       margin-bottom: 5px; font-size: 14px; display: none;
       opacity: 0.8;
+      text-align: left;
     }
     #fixed-controls button:hover {
       opacity: 1;
@@ -178,18 +183,42 @@
     #help-modal h3 { 
       color: white; 
       margin-bottom: 15px; 
-      font-size: 24px;
+      font-size: 28px;
+      text-shadow: 0 0 10px #ff1493;
     }
     #help-modal p {
       color: white; margin-bottom: 15px; text-align: left;
       max-width: 800px; line-height: 1.6;
       font-size: 16px;
     }
+    #help-modal strong {
+      color: #ff1493;
+      font-size: 18px;
+    }
     #help-modal img {
       max-width: 90%;
       max-height: 400px;
       margin: 15px 0;
       border-radius: 5px;
+      box-shadow: 0 0 20px rgba(255, 20, 147, 0.5);
+    }
+    #help-modal .modal-content {
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 25px;
+      border-radius: 10px;
+      max-width: 800px;
+      margin: 20px auto;
+      border: 1px solid #ff1493;
+    }
+    #help-modal .feature-section {
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.3);
+    }
+    #help-modal .feature-title {
+      font-size: 20px;
+      color: #ff1493;
+      margin-bottom: 10px;
     }
     #custom-image-modal h3 { color: white; margin-bottom: 20px; font-size: 24px; }
     #custom-image-modal p {
@@ -216,8 +245,21 @@
     }
     #apply-custom-image { background-color: #ff1493; color: white; }
     #cancel-custom-image, #reset-default-image, #close-help { background-color: #666; color: white; }
+    
+    /* 右側功能按鈕 */
+    .right-controls {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+    
+    /* 切換照片按鈕 */
     #profile-switcher {
-      position: absolute;
+      position: fixed;
       bottom: 15px;
       right: 15px;
       z-index: 100;
@@ -237,11 +279,9 @@
     #profile-switcher:hover {
       background-color: rgba(255, 20, 147, 0.9);
     }
+    
+    /* 幫助按鈕 */
     #help-button {
-      position: fixed;
-      top: 15px;
-      right: 15px;
-      z-index: 100;
       background-color: rgba(255, 105, 180, 0.7);
       border-radius: 50%;
       width: 40px;
@@ -255,10 +295,12 @@
       color: white;
       border: 2px solid white;
       box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      margin-bottom: 10px;
     }
     #help-button:hover {
       background-color: rgba(255, 20, 147, 0.9);
     }
+    
     #shooting-tip {
       position: fixed;
       top: 50%;
@@ -357,22 +399,46 @@
   </div>
   
   <div id="help-modal">
-    <h3>網站使用說明</h3>
-    <p><strong>黃庭筠是誰？</strong><br>
-    黃庭筠，台灣世新大學傳播管理學系學生，學號A103210095，生於1995年12月13日。她不僅身材前凸後翹，而且是個不折不扣的反差騷貨，在上學期間就荣獲萬人騎的稱號，對於所有炮友的要求都有求必應。時間一長，她也練就出了精湛的口技，趴在炮友身上賣力地吞吐肉棒，溫暖濕滑的嘴穴緊緊包裹肉棒，淫蕩的表情很是到位，時不時還發出陣陣極度下賤的呻吟。以下是她的學生證照片：</p>
-    <img src="images/help/student_id.jpg" alt="黃庭筠學生證">
-    <p><strong>網站功能說明：</strong></p>
-    <p>1. <strong>添加文字</strong>：在輸入框中輸入文字，點擊「添加文字」按鈕將文字添加到圖片上。您也可以點擊「隨機文字」按鈕添加預設的羞辱文字。</p>
-    <p>2. <strong>移動文字</strong>：點擊並拖動文字可以調整其位置。點擊文字後，左上角會出現放大、縮小和刪除按鈕。</p>
-    <p>3. <strong>射精功能</strong>：點擊「射爆她！」按鈕進入射精模式，然後點擊圖片任意位置進行射精。</p>
-    <p>4. <strong>切換照片</strong>：點擊右下角的循環按鈕可以切換不同的預設照片。</p>
-    <p>5. <strong>自定義照片</strong>：點擊「自定義」按鈕可以上傳您自己的照片作為底圖。</p>
-    <p>6. <strong>清除畫布</strong>：點擊「清除畫布」按鈕可以清除所有射精痕跡和文字，恢復原始圖片。</p>
-    <div class="modal-buttons">
-      <button id="close-help" class="modal-button">關閉</button>
+    <div class="modal-content">
+      <h3>黃庭筠的顏射體驗 - 使用說明</h3>
+      
+      <div class="feature-section">
+        <div class="feature-title">🔍 黃庭筠是誰？</div>
+        <p>黃庭筠，台灣世新大學傳播管理學系學生，學號A103210095，生於1995年12月13日。她不僅身材前凸後翹，而且是個不折不扣的反差騷貨，在上學期間就荣獲萬人騎的稱號，對於所有炮友的要求都有求必應。</p>
+        <p>據她的炮友透露，黃庭筠最喜歡被顏射，每次被射在臉上時都會露出滿足的表情，並用舌頭舔食嘴邊的精液。她還會主動要求拍照留念，並將這些照片珍藏在私人相冊中。</p>
+        <p>她的口技尤其出名，能夠深喉到根部而不嘔吐，舌頭靈活地舔弄龜頭和柱身，時不時還發出淫蕩的呻吟聲。她的嘴唇柔軟濕潤，總是塗著鮮豔的口紅，讓人忍不住想射在她臉上，看著白濁的精液順著她精緻的臉蛋滑落。</p>
+        <img src="images/help/student_id.jpg" alt="黃庭筠學生證">
+      </div>
+      
+      <div class="feature-section">
+        <div class="feature-title">🎮 網站功能說明</div>
+        
+        <p><strong>1. 添加羞辱文字</strong><br>
+        在輸入框中輸入任何你想對這賤貨說的話，點擊「添加文字」按鈕將文字添加到圖片上。你也可以點擊「隨機文字」按鈕添加預設的羞辱文字，讓她知道自己有多賤。</p>
+        
+        <p><strong>2. 移動和編輯文字</strong><br>
+        點擊並拖動文字可以調整其位置，將羞辱文字放在她最敏感的部位。點擊文字後，左上角會出現放大、縮小和刪除按鈕，讓你完全控制文字的大小和位置。</p>
+        
+        <p><strong>3. 射精功能</strong><br>
+        點擊「射爆她！」按鈕進入射精模式，然後點擊圖片任意位置進行射精。你可以射在她的臉上、嘴裡、眼睛上，或任何你想射的地方，看著精液覆蓋她的臉蛋。</p>
+        
+        <p><strong>4. 切換照片</strong><br>
+        點擊右下角的循環按鈕可以切換不同的預設照片。我們提供了6張黃庭筠的不同照片，讓你可以在不同角度和表情上射精和羞辱她。</p>
+        
+        <p><strong>5. 自定義照片</strong><br>
+        點擊「自定義」按鈕可以上傳你自己的照片作為底圖。如果你有黃庭筠的其他照片，或者想用其他女生的照片，都可以上傳並進行射精和羞辱。</p>
+        
+        <p><strong>6. 清除畫布</strong><br>
+        點擊「清除畫布」按鈕可以清除所有射精痕跡和文字，恢復原始圖片。當你射完一輪後，可以清除畫布，重新開始新一輪的射精和羞辱。</p>
+      </div>
+      
+      <div class="modal-buttons">
+        <button id="close-help" class="modal-button">關閉</button>
+      </div>
     </div>
   </div>
   
+  <!-- 左側控制按鈕 -->
   <div id="fixed-controls">
     <button id="exit-aim-mode">退出射精模式</button>
     <button id="enlarge-text">放大文字</button>
@@ -380,8 +446,12 @@
     <button id="delete-text">刪除文字</button>
   </div>
   
+  <!-- 右側功能按鈕 -->
+  <div class="right-controls">
+    <div id="help-button" title="使用說明">?</div>
+  </div>
+  
   <div id="shooting-tip">點擊圖片任意位置進行射精</div>
-  <div id="help-button" title="使用說明">?</div>
   
   <div class="container">
     <h1>黃庭筠的極致顏射體驗</h1>
@@ -474,7 +544,8 @@
       "images/profiles/2.png",
       "images/profiles/3.png",
       "images/profiles/4.jpeg",
-      "images/profiles/5.jpg"
+      "images/profiles/5.jpg",
+      "images/profiles/6.jpg" // 新增第6張圖片
     ];
     
     let state = {
@@ -840,17 +911,12 @@
     function startAimMode() {
       state.isAiming = true;
       
-      // 在移動設備上不顯示準心，而是顯示提示
-      if (state.isMobile) {
-        els.shootingTip.style.display = 'block';
-        els.shootingTip.textContent = '點擊圖片任意位置進行射精';
-        setTimeout(() => {
-          els.shootingTip.style.display = 'none';
-        }, 2000);
-      } else {
-        els.aimCircle.style.display = 'block';
-        els.canvasContainer.style.cursor = 'none';
-      }
+      // 不論是否為移動設備，都顯示提示而不顯示準心
+      els.shootingTip.style.display = 'block';
+      els.shootingTip.textContent = '點擊圖片任意位置進行射精';
+      setTimeout(() => {
+        els.shootingTip.style.display = 'none';
+      }, 2000);
       
       els.exitAim.style.display = 'block';
       hideTextControls();
@@ -865,21 +931,8 @@
     }
     
     function handleAim(e) {
-      if (!state.isAiming || state.isMobile) return;
-      
-      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-      
-      // 獲取canvas容器的位置
-      const rect = canvas.getBoundingClientRect();
-      
-      // 計算相對於canvas的位置
-      const x = clientX - rect.left;
-      const y = clientY - rect.top;
-      
-      // 設置準心位置，不使用transform以避免偏移問題
-      els.aimCircle.style.left = `${x - 20}px`;  // 20是準心寬度的一半
-      els.aimCircle.style.top = `${y - 20}px`;   // 20是準心高度的一半
+      // 不再顯示準心，所以這個函數不需要做任何事情
+      return;
     }
     
     function handleShoot(e) {
