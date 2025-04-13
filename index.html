@@ -172,6 +172,7 @@
       z-index: 10001; flex-direction: column;
       justify-content: center; align-items: center; padding: 20px;
       box-sizing: border-box;
+      overflow-y: auto; /* 添加垂直滾動 */
     }
     #help-modal {
       display: none; position: fixed; top: 0; left: 0;
@@ -197,7 +198,7 @@
     }
     #help-modal img {
       max-width: 90%;
-      max-height: 400px;
+      max-height: 300px; /* 減小圖片高度 */
       margin: 15px 0;
       border-radius: 5px;
       box-shadow: 0 0 20px rgba(255, 20, 147, 0.5);
@@ -207,7 +208,7 @@
       padding: 25px;
       border-radius: 10px;
       max-width: 800px;
-      margin: 20px auto;
+      margin: 10px auto; /* 減小上下邊距 */
       border: 1px solid #ff1493;
     }
     #help-modal .feature-section {
@@ -232,8 +233,11 @@
       font-size: 16px;
     }
     #custom-image-preview {
-      max-width: 80%; max-height: 400px; margin: 20px 0;
-      border-radius: 5px; display: none;
+      max-width: 80%; 
+      max-height: 250px; /* 減小預覽圖片高度 */
+      margin: 10px 0; /* 減小上下邊距 */
+      border-radius: 5px; 
+      display: none;
     }
     .modal-buttons { display: flex; justify-content: center; gap: 15px; }
     .modal-button { 
@@ -317,6 +321,38 @@
       max-width: 80%;
     }
     
+    /* 手機版文字控制按鈕 */
+    .mobile-text-controls {
+      position: fixed;
+      bottom: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: none;
+      flex-direction: row;
+      justify-content: center;
+      gap: 10px;
+      z-index: 1000;
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 10px;
+      border-radius: 5px;
+      width: auto;
+    }
+    
+    .mobile-text-controls button {
+      background-color: #ff1493;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      opacity: 0.9;
+    }
+    
+    .mobile-text-controls button:hover {
+      opacity: 1;
+    }
+    
     /* 媒體查詢，針對移動設備 */
     @media (max-width: 768px) {
       .container {
@@ -330,17 +366,7 @@
         font-size: 16px;
       }
       #fixed-controls {
-        top: 10px;
-        left: 10px;
-        flex-direction: row;
-        flex-wrap: wrap;
-        max-width: 150px;
-        justify-content: flex-start;
-      }
-      #fixed-controls button {
-        margin-right: 5px;
-        font-size: 12px;
-        padding: 6px 8px;
+        display: none; /* 在手機上隱藏桌面版控制按鈕 */
       }
       .small-button { 
         width: calc(50% - 4px); /* 在手機上每行顯示兩個按鈕 */
@@ -360,6 +386,19 @@
       #add-text-button {
         width: 80px;
         font-size: 14px;
+      }
+      #help-modal .modal-content {
+        padding: 15px;
+        margin: 5px auto;
+      }
+      #help-modal h3 {
+        font-size: 22px;
+      }
+      #help-modal p {
+        font-size: 14px;
+      }
+      #custom-image-preview {
+        max-height: 200px; /* 在手機上進一步減小預覽圖片高度 */
       }
     }
   </style>
@@ -417,7 +456,7 @@
         在輸入框中輸入任何你想對這賤貨說的話，點擊「添加文字」按鈕將文字添加到圖片上。你也可以點擊「隨機文字」按鈕添加預設的羞辱文字，讓她知道自己有多賤。</p>
         
         <p><strong>2. 移動和編輯文字</strong><br>
-        點擊並拖動文字可以調整其位置，將羞辱文字放在她最敏感的部位。點擊文字後，左上角會出現放大、縮小和刪除按鈕，讓你完全控制文字的大小和位置。</p>
+        點擊並拖動文字可以調整其位置，將羞辱文字放在她最敏感的部位。點擊文字後，會出現放大、縮小和刪除按鈕，讓你完全控制文字的大小和位置。</p>
         
         <p><strong>3. 射精功能</strong><br>
         點擊「射爆她！」按鈕進入射精模式，然後點擊圖片任意位置進行射精。你可以射在她的臉上、嘴裡、眼睛上，或任何你想射的地方，看著精液覆蓋她的臉蛋。</p>
@@ -438,12 +477,19 @@
     </div>
   </div>
   
-  <!-- 左側控制按鈕 -->
+  <!-- 左側控制按鈕 (桌面版) -->
   <div id="fixed-controls">
     <button id="exit-aim-mode">退出射精模式</button>
     <button id="enlarge-text">放大文字</button>
     <button id="shrink-text">縮小文字</button>
     <button id="delete-text">刪除文字</button>
+  </div>
+  
+  <!-- 手機版文字控制按鈕 -->
+  <div class="mobile-text-controls">
+    <button id="mobile-enlarge-text">放大</button>
+    <button id="mobile-shrink-text">縮小</button>
+    <button id="mobile-delete-text">刪除</button>
   </div>
   
   <!-- 右側功能按鈕 -->
@@ -493,6 +539,10 @@
       enlargeText: document.getElementById('enlarge-text'),
       shrinkText: document.getElementById('shrink-text'),
       deleteText: document.getElementById('delete-text'),
+      mobileTextControls: document.querySelector('.mobile-text-controls'),
+      mobileEnlargeText: document.getElementById('mobile-enlarge-text'),
+      mobileShrinkText: document.getElementById('mobile-shrink-text'),
+      mobileDeleteText: document.getElementById('mobile-delete-text'),
       warningScreen: document.getElementById('warning-screen'),
       enterBtn: document.getElementById('enter-button'),
       exitBtn: document.getElementById('exit-button'),
@@ -765,9 +815,15 @@
       els.randomText.addEventListener('click', addRandomText);
       els.textInput.addEventListener('keyup', e => e.key === 'Enter' && addCustomText());
       
+      // 桌面版文字控制按鈕
       els.enlargeText.addEventListener('click', enlargeSelectedText);
       els.shrinkText.addEventListener('click', shrinkSelectedText);
       els.deleteText.addEventListener('click', deleteSelectedText);
+      
+      // 手機版文字控制按鈕
+      els.mobileEnlargeText.addEventListener('click', enlargeSelectedText);
+      els.mobileShrinkText.addEventListener('click', shrinkSelectedText);
+      els.mobileDeleteText.addEventListener('click', deleteSelectedText);
       
       document.addEventListener('click', hideTextControlsOnOutsideClick);
     }
@@ -857,17 +913,28 @@
     function showTextControls(textElement) {
       if (state.isAiming) return;
       
-      // 顯示控制按鈕
-      els.enlargeText.style.display = 'block';
-      els.shrinkText.style.display = 'block';
-      els.deleteText.style.display = 'block';
+      // 檢查是否為移動設備
+      if (state.isMobile) {
+        // 在手機上顯示底部控制按鈕
+        els.mobileTextControls.style.display = 'flex';
+      } else {
+        // 在桌面上顯示左上角控制按鈕
+        els.enlargeText.style.display = 'block';
+        els.shrinkText.style.display = 'block';
+        els.deleteText.style.display = 'block';
+      }
     }
     
     function hideTextControls() {
       state.selectedText = null;
+      
+      // 隱藏桌面版控制按鈕
       els.enlargeText.style.display = 'none';
       els.shrinkText.style.display = 'none';
       els.deleteText.style.display = 'none';
+      
+      // 隱藏手機版控制按鈕
+      els.mobileTextControls.style.display = 'none';
     }
     
     function hideTextControlsOnOutsideClick(e) {
@@ -875,7 +942,10 @@
           !e.target.id.includes('text') && 
           e.target.id !== 'enlarge-text' && 
           e.target.id !== 'shrink-text' && 
-          e.target.id !== 'delete-text') {
+          e.target.id !== 'delete-text' &&
+          e.target.id !== 'mobile-enlarge-text' && 
+          e.target.id !== 'mobile-shrink-text' && 
+          e.target.id !== 'mobile-delete-text') {
         hideTextControls();
       }
     }
