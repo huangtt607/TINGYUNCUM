@@ -11,7 +11,7 @@
   <meta property="og:description" content="黃庭筠的顏射互動網站 - 在線射精體驗">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://huangtt607.github.io/TINGYUNCUM/">
-  <meta property="og:image" content="images/1234567.png">
+  <meta property="og:image" content="images/profiles/1.png">
   <title>黃庭筠的顏射體驗</title>
   <link rel="icon" type="image/png" href="images/favicon.png">
   <!-- Google tag (gtag.js) -->
@@ -80,7 +80,7 @@
       color: white; text-align: center; text-decoration: none;
       font-size: 12px; border-radius: 5px; border: none; cursor: pointer;
     }
-    .small-button { width: calc(25% - 4px); margin: 0 2px 4px 0; }
+    .small-button { width: calc(20% - 4px); margin: 0 2px 4px 0; }
     #fixed-controls {
       position: fixed; top: 10px; left: 10px; z-index: 1000;
       display: flex; flex-direction: column;
@@ -168,6 +168,27 @@
     .modal-button { padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; }
     #apply-custom-image { background-color: #ff1493; color: white; }
     #cancel-custom-image, #reset-default-image { background-color: #666; color: white; }
+    #profile-switcher {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      z-index: 100;
+      background-color: rgba(255, 105, 180, 0.7);
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      color: white;
+      border: 2px solid white;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+    #profile-switcher:hover {
+      background-color: rgba(255, 20, 147, 0.9);
+    }
   </style>
 </head>
 <body>
@@ -193,9 +214,9 @@
   
   <div id="custom-image-modal">
     <h3>上傳自定義照片</h3>
-    <p>選擇一張照片作為底圖，替換原本的人物圖像。<br>為了最佳效果，請選擇清晰的正面照片。</p>
+    <p>選擇一張照片作為底圖，替換原本的人物圖像。<br>支援JPG、PNG格式，推薦使用PNG格式以獲得最佳效果。<br>為了最佳效果，請選擇清晰的正面照片。</p>
     <label id="custom-image-label" for="custom-image-input">選擇照片</label>
-    <input type="file" id="custom-image-input" accept="image/*">
+    <input type="file" id="custom-image-input" accept="image/jpeg,image/png">
     <img id="custom-image-preview">
     <div class="modal-buttons">
       <button id="apply-custom-image" class="modal-button" disabled>套用照片</button>
@@ -218,6 +239,7 @@
     <div id="canvas-container">
       <canvas id="main-canvas"></canvas>
       <div id="aim-circle"><div id="aim-center"></div></div>
+      <div id="profile-switcher" title="切換預設照片">↻</div>
     </div>
     
     <div class="controls-footer">
@@ -230,6 +252,7 @@
         <button id="shoot-button" class="button small-button">射爆她！</button>
         <button id="clean-button" class="button small-button">清除畫布</button>
         <button id="custom-mode-button" class="button small-button">自定義</button>
+        <button id="switch-profile-button" class="button small-button">切換照片</button>
       </div>
       <p class="info">玩弄這欠幹婊子！使勁羞辱她！</p>
     </div>
@@ -262,7 +285,9 @@
       customImagePreview: document.getElementById('custom-image-preview'),
       applyCustomImage: document.getElementById('apply-custom-image'),
       cancelCustomImage: document.getElementById('cancel-custom-image'),
-      resetDefaultImage: document.getElementById('reset-default-image')
+      resetDefaultImage: document.getElementById('reset-default-image'),
+      profileSwitcher: document.getElementById('profile-switcher'),
+      switchProfileButton: document.getElementById('switch-profile-button')
     };
     
     const randomTexts = [
@@ -275,30 +300,40 @@
     ];
 
     const cumImages = [
-      "images/573575155.png", 
-      "images/937768552.png",
-      "images/2056307458.png", 
-      "images/146852559.png",
-      "images/151294132.png", 
-      "images/374512044.png",
-      "images/375362629.png", 
-      "images/387016456.png",
-      "images/406480507.png", 
-      "images/471795489.png",
-      "images/577989388.png", 
-      "images/579602214.png",
-      "images/1178825790.png"
+      "images/cum/573575155.png", 
+      "images/cum/937768552.png",
+      "images/cum/2056307458.png", 
+      "images/cum/146852559.png",
+      "images/cum/151294132.png", 
+      "images/cum/374512044.png",
+      "images/cum/375362629.png", 
+      "images/cum/387016456.png",
+      "images/cum/406480507.png", 
+      "images/cum/471795489.png",
+      "images/cum/577989388.png", 
+      "images/cum/579602214.png",
+      "images/cum/1178825790.png",
+      "images/cum/387016457.png"
     ];
     
-    const baseImageUrl = "images/1234567.png";
+    const profileImages = [
+      "images/profiles/1.png",
+      "images/profiles/2.png",
+      "images/profiles/3.png",
+      "images/profiles/4.jpeg",
+      "images/profiles/5.jpg"
+    ];
+    
     let state = {
       isAiming: false,
       baseImage: new Image(),
       currentCumIndex: 0,
       selectedText: null,
       preloadedImages: [],
+      preloadedProfiles: [],
       customImage: null,
-      isUsingCustomImage: false
+      isUsingCustomImage: false,
+      currentProfileIndex: 0
     };
     
     // 事件初始化
@@ -347,19 +382,46 @@
     
     els.cancelCustomImage.addEventListener('click', () => els.customImageModal.style.display = 'none');
     
+    // 切換預設照片功能
+    els.profileSwitcher.addEventListener('click', switchProfile);
+    els.switchProfileButton.addEventListener('click', switchProfile);
+    
+    function switchProfile() {
+      if (state.isUsingCustomImage) {
+        state.isUsingCustomImage = false;
+      }
+      
+      state.currentProfileIndex = (state.currentProfileIndex + 1) % profileImages.length;
+      state.baseImage.src = profileImages[state.currentProfileIndex];
+      cleanCanvas();
+    }
+    
     function preloadAssets() {
-      const totalAssets = cumImages.length + 1;
+      const totalAssets = cumImages.length + profileImages.length;
       let loadedAssets = 0;
       
+      // 預加載第一張預設圖片作為基本圖片
       state.baseImage.onload = assetLoaded;
-      state.baseImage.src = baseImageUrl;
+      state.baseImage.src = profileImages[0];
       
+      // 預加載所有精液圖片
       cumImages.forEach(src => {
         const img = new Image();
         img.onload = assetLoaded;
         img.onerror = assetLoaded;
         img.src = src;
         state.preloadedImages.push(img);
+      });
+      
+      // 預加載所有預設圖片
+      profileImages.forEach((src, index) => {
+        if (index > 0) { // 第一張已經作為baseImage加載
+          const img = new Image();
+          img.onload = assetLoaded;
+          img.onerror = assetLoaded;
+          img.src = src;
+          state.preloadedProfiles.push(img);
+        }
       });
       
       function assetLoaded() {
