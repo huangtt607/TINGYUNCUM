@@ -273,20 +273,25 @@
       align-items: flex-end;
     }
     
-    /* 修改自定義按鈕位置 */
-    #custom-mode-button {
-      position: absolute;
-      top: 60px;
-      right: 10px;
+    /* 幫助按鈕 */
+    #help-button {
+      background-color: rgba(255, 105, 180, 0.7);
+      border-radius: 50%;
       width: 40px;
       height: 40px;
-      border-radius: 50%;
-      padding: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 12px;
-      z-index: 100;
+      cursor: pointer;
+      font-size: 22px;
+      font-weight: bold;
+      color: white;
+      border: 2px solid white;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      margin-bottom: 10px;
+    }
+    #help-button:hover {
+      background-color: rgba(255, 20, 147, 0.9);
     }
     
     /* 修改切換照片按鈕 */
@@ -309,27 +314,6 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.3);
     }
     #profile-switcher:hover {
-      background-color: rgba(255, 20, 147, 0.9);
-    }
-    
-    /* 幫助按鈕 */
-    #help-button {
-      background-color: rgba(255, 105, 180, 0.7);
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 22px;
-      font-weight: bold;
-      color: white;
-      border: 2px solid white;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-      margin-bottom: 10px;
-    }
-    #help-button:hover {
       background-color: rgba(255, 20, 147, 0.9);
     }
     
@@ -397,7 +381,7 @@
         display: none; /* 在手機上隱藏桌面版控制按鈕 */
       }
       .small-button { 
-        width: calc(50% - 4px); /* 在手機上每行顯示兩個按鈕 */
+        width: calc(33.33% - 4px); /* 在手機上每行顯示三個按鈕 */
         font-size: 14px;
         padding: 8px 0;
       }
@@ -428,12 +412,6 @@
       }
       #custom-image-preview {
         max-height: 180px; /* 在手機上進一步減小預覽圖片高度 */
-      }
-      /* 在手機上調整自定義按鈕位置 */
-      #custom-mode-button {
-        top: auto;
-        right: 15px;
-        bottom: 70px;
       }
     }
   </style>
@@ -480,6 +458,10 @@
         <div class="feature-title">🔍 黃庭筠是誰？</div>
         <p>黃庭筠，台灣世新大學傳播管理學系學生，學號A103210095，生於1995年12月13日。她不僅身材前凸後翹，而且是個不折不扣的反差騷貨，在上學期間就荣獲萬人騎的稱號，對於所有炮友的要求都有求必應。</p>
         <p>據她的炮友透露，黃庭筠最喜歡被顏射，每次被射在臉上時都會露出滿足的表情，並用舌頭舔食嘴邊的精液。她還會主動要求拍照留念，並將這些照片珍藏在私人相冊中。</p>
+        <p>她的口技尤其出名，能夠深喉到根部而不嘔吐，舌頭靈活地舔弄龜頭和柱身，時不時還發出淫蕩的呻吟聲。她的嘴唇柔軟濕潤，總是塗著鮮豔的口紅，讓人忍不住想射在她臉上，看著白濁的精液順著她精緻的臉蛋滑落。</p>
+        <p>黃庭筠的私生活極為混亂，據說她曾在一個週末接待過十幾個不同的男人，每個人都在她的嘴裡、陰道和肛門裡射精。她的陰道極為鬆弛，據說可以輕易容納兩根陰莖同時插入。她的陰唇因為過度使用而外翻，陰蒂異常肥大，輕輕觸碰就能讓她高潮連連。</p>
+        <p>她的乳房雖然不是特別大，但乳頭和乳暈卻異常敏感，呈現深褐色，乳頭總是硬挺，即使是在冬天穿著厚衣服時也能清晰地看到她的乳頭凸起。她喜歡讓男人吸吮她的乳頭，有時甚至會噴出少量乳汁，這讓她感到極度興奮。</p>
+        <p>黃庭筠的肛門也是她的敏感帶之一，她經常讓男人在她的肛門內射精，然後故意不排出來，讓精液在體內停留數小時。她曾經在一次聚會上，讓五個男人輪流在她的肛門內射精，最後當她排出這些精液時，竟然高潮到失禁，尿液和精液混合著從她的下體噴湧而出。</p>
         <img src="images/help/student_id.jpg" alt="黃庭筠學生證">
       </div>
       
@@ -541,7 +523,6 @@
       <canvas id="main-canvas"></canvas>
       <div id="aim-circle"><div id="aim-center"></div></div>
       <div id="profile-switcher" title="切換預設照片">↻</div>
-      <button id="custom-mode-button" class="button" title="上傳自定義照片">自</button>
     </div>
     
     <div class="controls-footer">
@@ -553,6 +534,7 @@
         <button id="random-text-button" class="button small-button">隨機文字</button>
         <button id="shoot-button" class="button small-button">射爆她！</button>
         <button id="clean-button" class="button small-button">清除畫布</button>
+        <button id="custom-mode-button" class="button small-button">自定義</button>
       </div>
       <p class="info">玩弄這欠幹婊子！使勁羞辱她！</p>
     </div>
@@ -572,32 +554,32 @@
       exitAim: document.getElementById('exit-aim-mode'),
       enlargeText: document.getElementById('enlarge-text'),
       shrinkText: document.getElementById('shrink-text'),
-      deleteText: document.getElementById('delete-text'),
-      mobileTextControls: document.querySelector('.mobile-text-controls'),
+            deleteText: document.getElementById('delete-text'),
       mobileEnlargeText: document.getElementById('mobile-enlarge-text'),
       mobileShrinkText: document.getElementById('mobile-shrink-text'),
       mobileDeleteText: document.getElementById('mobile-delete-text'),
+      mobileTextControls: document.querySelector('.mobile-text-controls'),
       warningScreen: document.getElementById('warning-screen'),
       enterBtn: document.getElementById('enter-button'),
       exitBtn: document.getElementById('exit-button'),
       loadingScreen: document.getElementById('loading-screen'),
       progressBar: document.getElementById('progress-bar'),
       progressText: document.getElementById('progress-text'),
+      helpButton: document.getElementById('help-button'),
+      helpModal: document.getElementById('help-modal'),
+      closeHelp: document.getElementById('close-help'),
       customModeBtn: document.getElementById('custom-mode-button'),
       customImageModal: document.getElementById('custom-image-modal'),
       customImageInput: document.getElementById('custom-image-input'),
       customImagePreview: document.getElementById('custom-image-preview'),
       applyCustomImage: document.getElementById('apply-custom-image'),
-      cancelCustomImage: document.getElementById('cancel-custom-image'),
       resetDefaultImage: document.getElementById('reset-default-image'),
+      cancelCustomImage: document.getElementById('cancel-custom-image'),
       profileSwitcher: document.getElementById('profile-switcher'),
-      shootingTip: document.getElementById('shooting-tip'),
-      helpButton: document.getElementById('help-button'),
-      helpModal: document.getElementById('help-modal'),
-      closeHelp: document.getElementById('close-help')
+      shootingTip: document.getElementById('shooting-tip')
     };
-    
-        const randomTexts = [
+
+    const randomTexts = [
       "世新大學公廁", "傳播系肉便器", "A103210095賤畜", "黃庭筠賤種", "人盡可夫的婊子",
       "精液儲存罐", "爛穴母狗", "飢渴的騷逼", "永遠合不攏的逼", "精液過敏體質",
       "最愛吃屎的賤貨", "專吃爛雞巴", "專業吸精", "最愛被尿在臉上", "每天含精睡覺",
@@ -1051,7 +1033,7 @@
       const cumImg = state.preloadedImages[state.currentCumIndex];
       
       // 精液飛濺效果尺寸 - 縮小尺寸
-      const size = Math.random() * 50 + 70; // 從 80+120 改為 50+70
+      const size = Math.random() * 30 + 50; // 從 50+70 改為 30+50，進一步縮小
       
       // 使用source-atop確保只在非透明區域顯示精液
       ctx.globalCompositeOperation = 'source-atop';
