@@ -31,7 +31,7 @@
       overflow-x: hidden; display: flex; flex-direction: column;
     }
     .container {
-      max-width: 480px; padding: 5px; box-sizing: border-box;
+      max-width: 100%; padding: 5px; box-sizing: border-box;
       text-align: center; margin: 0 auto;
       display: flex; flex-direction: column; height: 100%;
     }
@@ -50,15 +50,18 @@
       position: relative; 
     }
     #canvas-container {
-      position: relative; width: 100%; max-width: 400px;
+      position: relative; width: 100%; 
       margin: 0 auto 8px auto; flex: 1;
       display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
     }
     #main-canvas {
       max-width: 100%;
+      max-height: 70vh;
       height: auto;
       display: block; 
       border-radius: 10px;
+      object-fit: contain;
     }
     .target-text {
       position: absolute; color: #ff1493; font-weight: bold;
@@ -80,9 +83,9 @@
       color: white; text-align: center; text-decoration: none;
       font-size: 12px; border-radius: 5px; border: none; cursor: pointer;
     }
-    .small-button { width: calc(20% - 4px); margin: 0 2px 4px 0; }
+    .small-button { width: calc(25% - 4px); margin: 0 2px 4px 0; }
     #fixed-controls {
-      position: fixed; top: 10px; left: 10px; z-index: 1000;
+      position: fixed; bottom: 10px; right: 10px; z-index: 1000;
       display: flex; flex-direction: column;
     }
     #fixed-controls button {
@@ -189,6 +192,44 @@
     #profile-switcher:hover {
       background-color: rgba(255, 20, 147, 0.9);
     }
+    #shooting-tip {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 10px 15px;
+      border-radius: 5px;
+      font-size: 14px;
+      z-index: 1000;
+      display: none;
+      text-align: center;
+      max-width: 80%;
+    }
+    
+    /* 媒體查詢，針對移動設備 */
+    @media (max-width: 768px) {
+      #fixed-controls {
+        bottom: 70px;
+        right: 10px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        max-width: 120px;
+        justify-content: flex-end;
+      }
+      #fixed-controls button {
+        margin-right: 5px;
+        font-size: 11px;
+        padding: 5px 7px;
+      }
+      .small-button { 
+        width: calc(25% - 4px); 
+      }
+      #main-canvas {
+        max-height: 60vh;
+      }
+    }
   </style>
 </head>
 <body>
@@ -232,6 +273,8 @@
     <button id="delete-text">刪除文字</button>
   </div>
   
+  <div id="shooting-tip">點擊圖片任意位置進行射擊</div>
+  
   <div class="container">
     <h1>黃庭筠的極致顏射體驗</h1>
     <p class="subtitle">她渴望你的洗禮！盡情羞辱她吧！</p>
@@ -252,7 +295,6 @@
         <button id="shoot-button" class="button small-button">射爆她！</button>
         <button id="clean-button" class="button small-button">清除畫布</button>
         <button id="custom-mode-button" class="button small-button">自定義</button>
-        <button id="switch-profile-button" class="button small-button">切換照片</button>
       </div>
       <p class="info">玩弄這欠幹婊子！使勁羞辱她！</p>
     </div>
@@ -287,7 +329,7 @@
       cancelCustomImage: document.getElementById('cancel-custom-image'),
       resetDefaultImage: document.getElementById('reset-default-image'),
       profileSwitcher: document.getElementById('profile-switcher'),
-      switchProfileButton: document.getElementById('switch-profile-button')
+      shootingTip: document.getElementById('shooting-tip')
     };
     
     const randomTexts = [
@@ -333,8 +375,17 @@
       preloadedProfiles: [],
       customImage: null,
       isUsingCustomImage: false,
-      currentProfileIndex: 0
+      currentProfileIndex: 0,
+      isMobile: false
     };
+    
+    // 檢測是否為移動設備
+    function checkMobile() {
+      state.isMobile = window.innerWidth <= 768 || 
+                      ('ontouchstart' in window) || 
+                      (navigator.maxTouchPoints > 0) || 
+                      (navigator.msMaxTouchPoints > 0);
+    }
     
     // 事件初始化
     els.enterBtn.addEventListener('click', () => {
@@ -384,7 +435,6 @@
     
     // 切換預設照片功能
     els.profileSwitcher.addEventListener('click', switchProfile);
-    els.switchProfileButton.addEventListener('click', switchProfile);
     
     function switchProfile() {
       if (state.isUsingCustomImage) {
@@ -399,6 +449,9 @@
     function preloadAssets() {
       const totalAssets = cumImages.length + profileImages.length;
       let loadedAssets = 0;
+      
+      // 檢測是否為移動設備
+      checkMobile();
       
       // 預加載第一張預設圖片作為基本圖片
       state.baseImage.onload = assetLoaded;
@@ -441,7 +494,10 @@
     
     function initializeApp() {
       resizeCanvas();
-      window.addEventListener('resize', resizeCanvas);
+      window.addEventListener('resize', () => {
+        checkMobile();
+        resizeCanvas();
+      });
       setupEventListeners();
       addInitialTexts();
     }
@@ -451,39 +507,48 @@
       
       if (!sourceImage || !sourceImage.complete) return;
       
-      // 直接使用原始圖片尺寸設置 canvas
-      canvas.width = sourceImage.width;
-      canvas.height = sourceImage.height;
+      // 獲取容器尺寸
+      const containerWidth = els.canvasContainer.clientWidth;
+      const containerHeight = window.innerHeight * (state.isMobile ? 0.6 : 0.7);
       
-      // 繪製圖片
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // 計算圖片的原始寬高比
+      const imageRatio = sourceImage.width / sourceImage.height;
       
-      // 如果是自定義圖片，確保居中顯示
-      if (state.isUsingCustomImage) {
-        // 計算居中位置
-        const x = (canvas.width - sourceImage.width) / 2;
-        const y = (canvas.height - sourceImage.height) / 2;
-        ctx.drawImage(sourceImage, x, y, sourceImage.width, sourceImage.height);
+      // 計算適合容器的尺寸，保持原始比例
+      let canvasWidth, canvasHeight;
+      
+      if (containerWidth / containerHeight > imageRatio) {
+        // 容器較寬，以高度為基準
+        canvasHeight = containerHeight;
+        canvasWidth = containerHeight * imageRatio;
       } else {
-        ctx.drawImage(sourceImage, 0, 0);
+        // 容器較高，以寬度為基準
+        canvasWidth = containerWidth;
+        canvasHeight = containerWidth / imageRatio;
       }
       
-      // 確保 canvas 不會超出容器
-      const maxWidth = els.canvasContainer.clientWidth;
-      const maxHeight = window.innerHeight - 150;
+      // 設置canvas尺寸
+      canvas.width = canvasWidth;
+      canvas.height = canvasHeight;
       
-      // 計算縮放比例 (CSS 會處理實際顯示尺寸)
-      const scaleX = maxWidth / canvas.width;
-      const scaleY = maxHeight / canvas.height;
-      const scale = Math.min(scaleX, scaleY);
+      // 清除canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       
-      // 更新 canvas 的 CSS 尺寸 (如果需要)
-      if (scale < 1) {
-        canvas.style.width = Math.floor(canvas.width * scale) + 'px';
-        canvas.style.height = Math.floor(canvas.height * scale) + 'px';
+      // 繪製圖片，確保完全填充canvas並居中
+      if (state.isUsingCustomImage) {
+        // 計算縮放比例
+        const scale = Math.min(canvasWidth / sourceImage.width, canvasHeight / sourceImage.height);
+        const scaledWidth = sourceImage.width * scale;
+        const scaledHeight = sourceImage.height * scale;
+        
+        // 計算居中位置
+        const x = (canvasWidth - scaledWidth) / 2;
+        const y = (canvasHeight - scaledHeight) / 2;
+        
+        ctx.drawImage(sourceImage, x, y, scaledWidth, scaledHeight);
       } else {
-        canvas.style.width = '';
-        canvas.style.height = '';
+        // 預設圖片直接填充整個canvas
+        ctx.drawImage(sourceImage, 0, 0, canvasWidth, canvasHeight);
       }
     }
     
@@ -588,10 +653,7 @@
     function showTextControls(textElement) {
       if (state.isAiming) return;
       
-      // 獲取文字元素的位置
-      const rect = textElement.getBoundingClientRect();
-      
-      // 設置控制按鈕的位置
+      // 顯示控制按鈕
       els.enlargeText.style.display = 'block';
       els.shrinkText.style.display = 'block';
       els.deleteText.style.display = 'block';
@@ -638,7 +700,17 @@
     
     function startAimMode() {
       state.isAiming = true;
-      els.aimCircle.style.display = 'block';
+      
+      // 在移動設備上不顯示準心，而是顯示提示
+      if (state.isMobile) {
+        els.shootingTip.style.display = 'block';
+        setTimeout(() => {
+          els.shootingTip.style.display = 'none';
+        }, 2000);
+      } else {
+        els.aimCircle.style.display = 'block';
+      }
+      
       els.exitAim.style.display = 'block';
       hideTextControls();
     }
@@ -646,11 +718,12 @@
     function exitAimMode() {
       state.isAiming = false;
       els.aimCircle.style.display = 'none';
+      els.shootingTip.style.display = 'none';
       els.exitAim.style.display = 'none';
     }
     
     function handleAim(e) {
-      if (!state.isAiming) return;
+      if (!state.isAiming || state.isMobile) return;
       
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
       const clientY = e.touches ? e.touches[0].clientY : e.clientY;
@@ -683,21 +756,8 @@
     }
     
     function cleanCanvas() {
-      // 清除 canvas
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      // 重新繪製基本圖片
-      const sourceImage = state.isUsingCustomImage ? state.customImage : state.baseImage;
-      if (sourceImage && sourceImage.complete) {
-        if (state.isUsingCustomImage) {
-          // 計算居中位置
-          const x = (canvas.width - sourceImage.width) / 2;
-          const y = (canvas.height - sourceImage.height) / 2;
-          ctx.drawImage(sourceImage, x, y, sourceImage.width, sourceImage.height);
-        } else {
-          ctx.drawImage(sourceImage, 0, 0);
-        }
-      }
+      // 重新調整並繪製canvas
+      resizeCanvas();
       
       // 退出瞄準模式
       exitAimMode();
