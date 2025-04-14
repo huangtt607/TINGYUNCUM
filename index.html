@@ -75,6 +75,14 @@
       font-size: 18px; text-shadow: 1px 1px 2px black;
       cursor: move; user-select: none; z-index: 10;
     }
+    .cum-element {
+      position: absolute;
+      cursor: move;
+      user-select: none;
+      z-index: 5;
+      width: 50px; /* 固定大小 */
+      height: 50px; /* 固定大小 */
+    }
     #aim-circle {
       position: absolute; border: 2px solid red; border-radius: 50%;
       width: 40px; height: 40px; pointer-events: none;
@@ -480,7 +488,7 @@
         點擊並拖動文字可以調整其位置。點擊文字後，會出現放大、縮小和刪除按鈕，讓你完全控制文字的大小和位置。</p>
         
         <p><strong>3. 射精功能</strong><br>
-        點擊「射爆她！」按鈕進入射精模式，然後點擊圖片任意位置進行射精。你可以射在她的臉上、嘴裡、眼睛上，或任何你想射的地方。</p>
+        點擊「射爆她！」按鈕進入射精模式，然後點擊圖片任意位置進行射精。你可以射在她的臉上、嘴裡、眼睛上，或任何你想射的地方。精液圖案也可以像文字一樣拖曳、調整大小或刪除。</p>
         
         <p><strong>4. 切換照片</strong><br>
         點擊右下角的循環按鈕可以切換不同的預設照片。我們提供了6張黃庭筠的不同照片，讓你可以在不同角度和表情上射精和羞辱她。</p>
@@ -502,9 +510,9 @@
   <div class="container">
     <div id="fixed-controls">
       <button id="exit-aim-mode">退出射精模式</button>
-      <button id="enlarge-text">放大文字</button>
-      <button id="shrink-text">縮小文字</button>
-      <button id="delete-text">刪除文字</button>
+      <button id="enlarge-text">放大</button>
+      <button id="shrink-text">縮小</button>
+      <button id="delete-text">刪除</button>
     </div>
     
     <!-- 手機版文字控制按鈕 -->
@@ -521,8 +529,8 @@
     
     <div id="shooting-tip">點擊圖片任意位置進行射精</div>
     
-    <h1>黃庭筠需要大家顏射</h1>
-    <p class="subtitle">她渴望你的精液！盡情羞辱她吧！</p>
+    <h1>黃庭筠的極致顏射體驗</h1>
+    <p class="subtitle">她渴望你的洗禮！盡情羞辱她吧！</p>
     
     <div id="canvas-container">
       <canvas id="main-canvas"></canvas>
@@ -546,14 +554,14 @@
   </div>
 
   <script>
-    const canvas = document.getElementById('main-canvas');
+        const canvas = document.getElementById('main-canvas');
     const ctx = canvas.getContext('2d');
     const els = {
       shoot: document.getElementById('shoot-button'),
       clean: document.getElementById('clean-button'),
       addText: document.getElementById('add-text-button'),
       randomText: document.getElementById('random-text-button'),
-            textInput: document.getElementById('custom-text-input'),
+      textInput: document.getElementById('custom-text-input'),
       canvasContainer: document.getElementById('canvas-container'),
       aimCircle: document.getElementById('aim-circle'),
       exitAim: document.getElementById('exit-aim-mode'),
@@ -623,7 +631,7 @@
       isAiming: false,
       baseImage: new Image(),
       currentCumIndex: 0,
-      selectedText: null,
+      selectedElement: null,
       preloadedImages: [],
       preloadedProfiles: [],
       customImage: null,
@@ -631,6 +639,7 @@
       currentProfileIndex: 0,
       isMobile: false,
       textElements: [],
+      cumElements: [],
       initialTextsAdded: false // 新增標記，用於追蹤初始文字是否已添加
     };
     
@@ -703,14 +712,16 @@
       state.currentProfileIndex = (state.currentProfileIndex + 1) % profileImages.length;
       state.baseImage.src = profileImages[state.currentProfileIndex];
       
-      // 保存當前文字元素
+      // 保存當前文字和精液元素
       const savedTextElements = [...state.textElements];
+      const savedCumElements = [...state.cumElements];
       
-      // 清除畫布但不清除文字
+      // 清除畫布但不清除文字和精液
       cleanCanvasOnly();
       
-      // 恢復文字元素
+      // 恢復文字和精液元素
       state.textElements = savedTextElements;
+      state.cumElements = savedCumElements;
     }
     
     function preloadAssets() {
@@ -836,17 +847,17 @@
       els.randomText.addEventListener('click', addRandomText);
       els.textInput.addEventListener('keyup', e => e.key === 'Enter' && addCustomText());
       
-      // 桌面版文字控制按鈕
-      els.enlargeText.addEventListener('click', enlargeSelectedText);
-      els.shrinkText.addEventListener('click', shrinkSelectedText);
-      els.deleteText.addEventListener('click', deleteSelectedText);
+      // 桌面版控制按鈕
+      els.enlargeText.addEventListener('click', enlargeSelectedElement);
+      els.shrinkText.addEventListener('click', shrinkSelectedElement);
+      els.deleteText.addEventListener('click', deleteSelectedElement);
       
-      // 手機版文字控制按鈕
-      els.mobileEnlargeText.addEventListener('click', enlargeSelectedText);
-      els.mobileShrinkText.addEventListener('click', shrinkSelectedText);
-      els.mobileDeleteText.addEventListener('click', deleteSelectedText);
+      // 手機版控制按鈕
+      els.mobileEnlargeText.addEventListener('click', enlargeSelectedElement);
+      els.mobileShrinkText.addEventListener('click', shrinkSelectedElement);
+      els.mobileDeleteText.addEventListener('click', deleteSelectedElement);
       
-      document.addEventListener('click', hideTextControlsOnOutsideClick);
+      document.addEventListener('click', hideControlsOnOutsideClick);
     }
     
     function getMousePos(evt) {
@@ -891,26 +902,30 @@
       // 將文字元素添加到追蹤數組
       state.textElements.push(textElement);
       
+      setupDraggableElement(textElement);
+    }
+    
+    function setupDraggableElement(element) {
       let isDragging = false, startX, startY;
       
-      textElement.addEventListener('mousedown', startDrag);
-      textElement.addEventListener('touchstart', startDrag);
+      element.addEventListener('mousedown', startDrag);
+      element.addEventListener('touchstart', startDrag);
       document.addEventListener('mousemove', drag);
       document.addEventListener('touchmove', drag);
       document.addEventListener('mouseup', stopDrag);
       document.addEventListener('touchend', stopDrag);
-      textElement.addEventListener('click', e => {
+      element.addEventListener('click', e => {
         e.stopPropagation();
-        state.selectedText = textElement;
-        showTextControls(textElement);
+        state.selectedElement = element;
+        showControls(element);
       });
       
       function startDrag(e) {
         isDragging = true;
         const clientX = e.touches ? e.touches[0].clientX : e.clientX;
         const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-        startX = clientX - textElement.offsetLeft;
-        startY = clientY - textElement.offsetTop;
+        startX = clientX - element.offsetLeft;
+        startY = clientY - element.offsetTop;
         e.preventDefault();
       }
       
@@ -921,8 +936,8 @@
         const clientY = e.touches ? e.touches[0].clientY : e.clientY;
         
         if (clientX && clientY) {
-          textElement.style.left = `${clientX - startX}px`;
-          textElement.style.top = `${clientY - startY}px`;
+          element.style.left = `${clientX - startX}px`;
+          element.style.top = `${clientY - startY}px`;
         }
       }
       
@@ -930,16 +945,16 @@
         if (isDragging) {
           isDragging = false;
           
-          // 如果是觸摸事件，並且是在手機模式下，則顯示文字控制按鈕
+          // 如果是觸摸事件，並且是在手機模式下，則顯示控制按鈕
           if (e && e.type === 'touchend' && state.isMobile) {
-            state.selectedText = textElement;
-            showTextControls(textElement);
+            state.selectedElement = element;
+            showControls(element);
           }
         }
       }
     }
     
-    function showTextControls(textElement) {
+    function showControls(element) {
       if (state.isAiming) return;
       
       // 檢查是否為移動設備
@@ -954,8 +969,8 @@
       }
     }
     
-    function hideTextControls() {
-      state.selectedText = null;
+    function hideControls() {
+      state.selectedElement = null;
       
       // 隱藏桌面版控制按鈕
       els.enlargeText.style.display = 'none';
@@ -966,8 +981,9 @@
       els.mobileTextControls.style.display = 'none';
     }
     
-    function hideTextControlsOnOutsideClick(e) {
+    function hideControlsOnOutsideClick(e) {
       if (!e.target.classList.contains('target-text') && 
+          !e.target.classList.contains('cum-element') && 
           !e.target.id.includes('text') && 
           e.target.id !== 'enlarge-text' && 
           e.target.id !== 'shrink-text' && 
@@ -975,35 +991,63 @@
           e.target.id !== 'mobile-enlarge-text' && 
           e.target.id !== 'mobile-shrink-text' && 
           e.target.id !== 'mobile-delete-text') {
-        hideTextControls();
+        hideControls();
       }
     }
     
-    function enlargeSelectedText() {
-      if (state.selectedText) {
-        const currentSize = window.getComputedStyle(state.selectedText).fontSize;
-        state.selectedText.style.fontSize = `${parseFloat(currentSize) + 2}px`;
+    function enlargeSelectedElement() {
+      if (state.selectedElement) {
+        const currentSize = window.getComputedStyle(state.selectedElement).fontSize;
+        if (state.selectedElement.classList.contains('target-text')) {
+          // 文字元素使用fontSize
+          state.selectedElement.style.fontSize = `${parseFloat(currentSize) + 2}px`;
+        } else if (state.selectedElement.classList.contains('cum-element')) {
+          // 精液元素使用width和height
+          const currentWidth = parseInt(state.selectedElement.style.width);
+          const currentHeight = parseInt(state.selectedElement.style.height);
+          state.selectedElement.style.width = `${currentWidth + 5}px`;
+          state.selectedElement.style.height = `${currentHeight + 5}px`;
+        }
       }
     }
     
-    function shrinkSelectedText() {
-      if (state.selectedText) {
-        const currentSize = window.getComputedStyle(state.selectedText).fontSize;
-        state.selectedText.style.fontSize = `${Math.max(parseFloat(currentSize) - 2, 10)}px`;
+    function shrinkSelectedElement() {
+      if (state.selectedElement) {
+        if (state.selectedElement.classList.contains('target-text')) {
+          // 文字元素使用fontSize
+          const currentSize = window.getComputedStyle(state.selectedElement).fontSize;
+          state.selectedElement.style.fontSize = `${Math.max(parseFloat(currentSize) - 2, 10)}px`;
+        } else if (state.selectedElement.classList.contains('cum-element')) {
+          // 精液元素使用width和height
+          const currentWidth = parseInt(state.selectedElement.style.width);
+          const currentHeight = parseInt(state.selectedElement.style.height);
+          if (currentWidth > 20 && currentHeight > 20) { // 確保最小尺寸
+            state.selectedElement.style.width = `${currentWidth - 5}px`;
+            state.selectedElement.style.height = `${currentHeight - 5}px`;
+          }
+        }
       }
     }
     
-    function deleteSelectedText() {
-      if (state.selectedText) {
-        // 從追蹤數組中移除
-        const index = state.textElements.indexOf(state.selectedText);
-        if (index > -1) {
-          state.textElements.splice(index, 1);
+    function deleteSelectedElement() {
+      if (state.selectedElement) {
+        if (state.selectedElement.classList.contains('target-text')) {
+          // 從文字追蹤數組中移除
+          const index = state.textElements.indexOf(state.selectedElement);
+          if (index > -1) {
+            state.textElements.splice(index, 1);
+          }
+        } else if (state.selectedElement.classList.contains('cum-element')) {
+          // 從精液追蹤數組中移除
+          const index = state.cumElements.indexOf(state.selectedElement);
+          if (index > -1) {
+            state.cumElements.splice(index, 1);
+          }
         }
         
-        state.selectedText.remove();
-        state.selectedText = null;
-        hideTextControls();
+        state.selectedElement.remove();
+        state.selectedElement = null;
+        hideControls();
       }
     }
     
@@ -1018,7 +1062,7 @@
       }, 2000);
       
       els.exitAim.style.display = 'block';
-      hideTextControls();
+      hideControls();
     }
     
     function exitAimMode() {
@@ -1045,19 +1089,34 @@
       // 獲取當前精液圖片
       const cumImg = state.preloadedImages[state.currentCumIndex];
       
-      // 精液飛濺效果尺寸 - 進一步縮小尺寸
-      const size = Math.random() * 25 + 35; // 從 30+50 改為 25+35，再次縮小
+      // 創建精液元素
+      const cumElement = document.createElement('img');
+      cumElement.classList.add('cum-element');
+      cumElement.src = cumImages[state.currentCumIndex];
       
-      // 使用source-atop確保只在非透明區域顯示精液
-      ctx.globalCompositeOperation = 'source-atop';
-      ctx.drawImage(cumImg, x - size / 2, y - size / 2, size, size);
-      ctx.globalCompositeOperation = 'source-over';
+      // 設置精液元素的位置和大小
+      const rect = canvas.getBoundingClientRect();
+      const posX = (x / canvas.width) * rect.width + rect.left;
+      const posY = (y / canvas.height) * rect.height + rect.top;
+      
+      cumElement.style.left = `${posX - 25}px`; // 精液圖案固定大小為50px，所以偏移25px使其居中
+      cumElement.style.top = `${posY - 25}px`;
+      cumElement.style.width = '50px'; // 固定大小
+      cumElement.style.height = '50px'; // 固定大小
+      
+      els.canvasContainer.appendChild(cumElement);
+      
+      // 將精液元素添加到追蹤數組
+      state.cumElements.push(cumElement);
+      
+      // 設置精液元素的拖曳和控制功能
+      setupDraggableElement(cumElement);
       
       // 循環使用精液圖片
       state.currentCumIndex = (state.currentCumIndex + 1) % state.preloadedImages.length;
     }
     
-    // 只清除畫布，不清除文字
+    // 只清除畫布，不清除文字和精液元素
     function cleanCanvasOnly() {
       // 重新調整並繪製canvas
       resizeCanvas();
@@ -1066,7 +1125,7 @@
       exitAimMode();
     }
     
-    // 清除畫布和所有文字
+    // 清除畫布和所有文字和精液元素
     function cleanCanvas() {
       // 清除所有文字元素
       state.textElements.forEach(element => {
@@ -1075,8 +1134,16 @@
         }
       });
       
-      // 清空文字元素數組
+      // 清除所有精液元素
+      state.cumElements.forEach(element => {
+        if (element && element.parentNode) {
+          element.remove();
+        }
+      });
+      
+      // 清空文字和精液元素數組
       state.textElements = [];
+      state.cumElements = [];
       
       // 重新調整並繪製canvas
       resizeCanvas();
@@ -1084,10 +1151,9 @@
       // 退出瞄準模式
       exitAimMode();
       
-      // 隱藏文字控制按鈕
-      hideTextControls();
+      // 隱藏控制按鈕
+      hideControls();
     }
   </script>
 </body>
 </html>
-
