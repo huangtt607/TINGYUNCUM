@@ -23,9 +23,6 @@
 
     gtag('config', 'G-9FVCBCYPZF');
   </script>
-  <!-- AddToAny BEGIN -->
-  <script async src="https://static.addtoany.com/menu/page.js"></script>
-  <!-- AddToAny END -->
   <style>
     body, html {
       margin: 0; padding: 0; height: 100%;
@@ -394,38 +391,6 @@
       opacity: 1;
     }
     
-    /* 社群分享按鈕樣式 */
-    .share-container {
-      margin: 15px auto;
-      text-align: center;
-      max-width: 800px;
-      background-color: rgba(255, 255, 255, 0.1);
-      padding: 10px;
-      border-radius: 5px;
-    }
-    
-    .share-title {
-      font-size: 18px;
-      margin-bottom: 10px;
-      color: white;
-    }
-    
-    /* 留言系統樣式 */
-    .comments-container {
-      margin: 20px auto;
-      max-width: 800px;
-      background-color: rgba(255, 255, 255, 0.1);
-      padding: 15px;
-      border-radius: 5px;
-    }
-    
-    .comments-title {
-      font-size: 20px;
-      margin-bottom: 15px;
-      color: white;
-      text-align: center;
-    }
-    
     /* 媒體查詢，針對移動設備 */
     @media (max-width: 768px) {
       .container {
@@ -475,18 +440,6 @@
       }
       #custom-image-preview {
         max-height: 180px; /* 在手機上進一步減小預覽圖片高度 */
-      }
-      .share-container {
-        padding: 8px;
-      }
-      .share-title {
-        font-size: 16px;
-      }
-      .comments-container {
-        padding: 10px;
-      }
-      .comments-title {
-        font-size: 18px;
       }
     }
   </style>
@@ -579,37 +532,32 @@
     <!-- 手機版文字控制按鈕 -->
     <div class="mobile-text-controls">
       <button id="mobile-enlarge-text">放大</button>
-            <button id="mobile-shrink-text">縮小</button>
+      <button id="mobile-shrink-text">縮小</button>
       <button id="mobile-delete-text">刪除</button>
     </div>
+    
+    <!-- 右側功能按鈕 -->
+    <div class="right-controls">
+      <div id="help-button" title="使用說明">?</div>
+    </div>
+    
+    <div id="shooting-tip">點擊圖片任意位置進行射精</div>
     
     <!-- 退出射擊模式按鈕 (獨立於fixed-controls) -->
     <button id="exit-aim-mode">退出射精模式</button>
     
-    <!-- 射擊提示 -->
-    <div id="shooting-tip"></div>
-    
-    <!-- 右側功能按鈕 -->
-    <div class="right-controls">
-      <div id="help-button">?</div>
-    </div>
-    
-    <!-- 切換照片按鈕 -->
-    <div id="profile-switcher">↻</div>
-    
-    <h1>黃庭筠的顏射體驗</h1>
-    <p class="subtitle">世新大學傳播系 A103210095 賤貨</p>
+    <h1>黃庭筠的極致顏射體驗</h1>
+    <p class="subtitle">她渴望你的洗禮！盡情羞辱她吧！</p>
     
     <div id="canvas-container">
       <canvas id="main-canvas"></canvas>
-      <div id="aim-circle">
-        <div id="aim-center"></div>
-      </div>
+      <div id="aim-circle"><div id="aim-center"></div></div>
+      <div id="profile-switcher" title="切換預設照片">👱‍♀️</div>
     </div>
     
     <div class="controls-footer">
       <div class="input-group">
-        <input type="text" id="custom-text-input" placeholder="輸入自定義文字">
+                <input type="text" id="custom-text-input" placeholder="輸入自定義文字">
         <button id="add-text-button" class="button">添加文字</button>
       </div>
       <div class="controls-container">
@@ -619,44 +567,6 @@
         <button id="custom-mode-button" class="button small-button">自定義</button>
       </div>
       <p class="info">玩弄這欠幹婊子！使勁羞辱她！</p>
-    </div>
-    
-    <!-- 添加社群分享按鈕 -->
-    <div class="share-container">
-      <div class="share-title">分享這個婊子給朋友</div>
-      <!-- AddToAny BEGIN -->
-      <div class="a2a_kit a2a_kit_size_32 a2a_default_style">
-        <a class="a2a_button_facebook"></a>
-        <a class="a2a_button_twitter"></a>
-        <a class="a2a_button_line"></a>
-        <a class="a2a_button_telegram"></a>
-        <a class="a2a_button_wechat"></a>
-        <a class="a2a_button_copy_link"></a>
-        <a class="a2a_dd" href="https://www.addtoany.com/share"></a>
-      </div>
-      <!-- AddToAny END -->
-    </div>
-    
-    <!-- 添加留言系統 -->
-    <div class="comments-container">
-      <div class="comments-title">留言羞辱這賤貨</div>
-      <!-- Giscus 留言系統 -->
-      <script src="https://giscus.app/client.js"
-        data-repo="huangtt607/TINGYUNCUM"
-        data-repo-id="R_kgDOLwXxXQ"
-        data-category="General"
-        data-category-id="DIC_kwDOLwXxXc4CdRNr"
-        data-mapping="pathname"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="top"
-        data-theme="dark"
-        data-lang="zh-TW"
-        data-loading="lazy"
-        crossorigin="anonymous"
-        async>
-      </script>
     </div>
   </div>
 
