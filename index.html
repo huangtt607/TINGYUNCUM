@@ -115,6 +115,29 @@
     #fixed-controls button:hover {
       opacity: 1;
     }
+    /* 修改退出射擊模式按鈕樣式 */
+    #exit-aim-mode {
+      position: fixed; /* 改為固定定位 */
+      bottom: 20px; /* 放在底部 */
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #ff1493 !important; 
+      color: white !important; 
+      border: none !important;
+      padding: 10px 20px !important; 
+      border-radius: 5px !important; 
+      cursor: pointer !important;
+      font-size: 16px !important; 
+      display: none;
+      opacity: 0.9 !important;
+      z-index: 1000;
+      text-align: center !important;
+      width: auto !important; /* 自動寬度 */
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+    #exit-aim-mode:hover {
+      opacity: 1 !important;
+    }
     .controls-footer { 
       width: 100%; 
       margin-top: auto; 
@@ -501,7 +524,6 @@
   <!-- 左側控制按鈕 (桌面版) -->
   <div class="container">
     <div id="fixed-controls">
-      <button id="exit-aim-mode">退出射精模式</button>
       <button id="enlarge-text">放大文字</button>
       <button id="shrink-text">縮小文字</button>
       <button id="delete-text">刪除文字</button>
@@ -521,6 +543,9 @@
     
     <div id="shooting-tip">點擊圖片任意位置進行射精</div>
     
+    <!-- 退出射擊模式按鈕 (獨立於fixed-controls) -->
+    <button id="exit-aim-mode">退出射精模式</button>
+    
     <h1>黃庭筠的極致顏射體驗</h1>
     <p class="subtitle">她渴望你的洗禮！盡情羞辱她吧！</p>
     
@@ -532,7 +557,7 @@
     
     <div class="controls-footer">
       <div class="input-group">
-        <input type="text" id="custom-text-input" placeholder="輸入自定義文字">
+                <input type="text" id="custom-text-input" placeholder="輸入自定義文字">
         <button id="add-text-button" class="button">添加文字</button>
       </div>
       <div class="controls-container">
@@ -553,7 +578,7 @@
       clean: document.getElementById('clean-button'),
       addText: document.getElementById('add-text-button'),
       randomText: document.getElementById('random-text-button'),
-            textInput: document.getElementById('custom-text-input'),
+      textInput: document.getElementById('custom-text-input'),
       canvasContainer: document.getElementById('canvas-container'),
       aimCircle: document.getElementById('aim-circle'),
       exitAim: document.getElementById('exit-aim-mode'),
@@ -1010,14 +1035,16 @@
     function startAimMode() {
       state.isAiming = true;
       
-      // 不論是否為移動設備，都顯示提示而不顯示準心
+      // 顯示退出射精模式按鈕
+      els.exitAim.style.display = 'block';
+      
+      // 顯示提示
       els.shootingTip.style.display = 'block';
       els.shootingTip.textContent = '點擊圖片任意位置進行射精';
       setTimeout(() => {
         els.shootingTip.style.display = 'none';
       }, 2000);
       
-      els.exitAim.style.display = 'block';
       hideTextControls();
     }
     
