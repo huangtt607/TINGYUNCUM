@@ -522,12 +522,12 @@
     <div id="shooting-tip">點擊圖片任意位置進行射精</div>
     
     <h1>黃庭筠需要大家顏射</h1>
-    <p class="subtitle">她渴望你的精液！盡情使用她吧！</p>
+    <p class="subtitle">她渴望你的精液！盡情羞辱她吧！</p>
     
     <div id="canvas-container">
       <canvas id="main-canvas"></canvas>
       <div id="aim-circle"><div id="aim-center"></div></div>
-      <div id="profile-switcher" title="切換預設照片">↻</div>
+      <div id="profile-switcher" title="切換預設照片">👱‍♀️</div>
     </div>
     
     <div class="controls-footer">
@@ -550,10 +550,10 @@
     const ctx = canvas.getContext('2d');
     const els = {
       shoot: document.getElementById('shoot-button'),
-            clean: document.getElementById('clean-button'),
+      clean: document.getElementById('clean-button'),
       addText: document.getElementById('add-text-button'),
       randomText: document.getElementById('random-text-button'),
-      textInput: document.getElementById('custom-text-input'),
+            textInput: document.getElementById('custom-text-input'),
       canvasContainer: document.getElementById('canvas-container'),
       aimCircle: document.getElementById('aim-circle'),
       exitAim: document.getElementById('exit-aim-mode'),
@@ -926,8 +926,16 @@
         }
       }
       
-      function stopDrag() {
-        isDragging = false;
+      function stopDrag(e) {
+        if (isDragging) {
+          isDragging = false;
+          
+          // 如果是觸摸事件，並且是在手機模式下，則顯示文字控制按鈕
+          if (e && e.type === 'touchend' && state.isMobile) {
+            state.selectedText = textElement;
+            showTextControls(textElement);
+          }
+        }
       }
     }
     
